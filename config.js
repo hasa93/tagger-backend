@@ -3,10 +3,10 @@ var config = {
 	db: {
 		host: 'localhost',
 		user: 'root',
-		password: '', //Remove this before commit
+		password: '', //Insert the root password of the db
 		database: 'tagger'
 	},
-	secret: '' //Remove this before commit
+	secret: 'INSERT YOUR JWT SECRET HERE'
 }
 
 module.exports = config;
