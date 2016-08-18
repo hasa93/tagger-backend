@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 
 var authenticator = require('./routes/authenticate');
 var user = require('./routes/user');
+var product = require('./routes/product');
 
 var app = express();
 
@@ -19,6 +20,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/api/login', authenticator);
 app.use('/api/user', user);
+app.use('/api/product', product)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
