@@ -21,6 +21,13 @@ router.get('/find/id/:prodId', function(req, res){
 	});
 });
 
+router.get('/find/uid/:prodUid', function(req, res){
+	var prodUid = req.params.prodUid;
+	productModel.getProductByTag(prodUid, function(result){
+		res.json(result);
+	});
+});
+
 router.post('/delete/:id', function(req, res){
 	productModel.deleteProduct(req.params.id, function(result){
 		res.json(result);

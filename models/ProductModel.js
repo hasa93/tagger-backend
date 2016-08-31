@@ -13,6 +13,19 @@ exports.getProductList = function(callBack){
 	});
 }
 
+exports.getProductByTag = function(prodUid, callBack){
+	var sql = "SELECT products.* FROM products, tag_map WHERE products.prod_id=tag_map.prod_id\
+	AND tag_map.tag_uid=? AND products.discontinued IS FALSE";
+
+	dbConn.query(sql, [prodUid], function(err, result){
+		if(err){
+			console.log(err);
+			return;
+		}
+		callBack(result);
+	});
+}
+
 exports.getProductById = function(prodId, callBack){
 
 	var sql = "SELECT * FROM products WHERE prod_id=? AND discontinued IS FALSE";
