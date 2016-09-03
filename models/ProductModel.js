@@ -76,3 +76,16 @@ exports.deleteProduct = function(productId, callBack){
 		callBack(result);
 	});
 }
+
+exports.insertProduct = function(product, callBack){
+	var sql = "INSERT INTO products (prod_name, unit_price, prod_cat, arr_date, age_range) VALUES\
+	(?, ?, ?, ?, ?)";
+
+	dbConn.query(sql, [product.name, product.price, product.category, product.arrival, product.age], function(err, result){
+		if(err){
+			console.log(err);
+			return;
+		}
+		callBack(result);
+	});
+}

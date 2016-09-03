@@ -34,5 +34,11 @@ router.post('/delete/:id', function(req, res){
 	});
 });
 
+router.post('/insert', function(req, res){
+	var product = req.body;
+	productModel.insertProduct(product, function(result){
+		res.json(result);
+	});
+});
 
 module.exports = router;
