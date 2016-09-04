@@ -28,7 +28,7 @@ exports.getProductByTag = function(prodUid, callBack){
 
 exports.getProductById = function(prodId, callBack){
 
-	var sql = "SELECT * FROM products WHERE prod_id=? AND discontinued IS FALSE";
+	var sql = "SELECT prod_id as id, prod_name AS name, unit_price AS price, prod_cat AS cat, DATE(arr_date) AS arrival, age_range AS age FROM products WHERE prod_id=? AND discontinued IS FALSE";
 
 	dbConn.query(sql, [prodId], function(err, result){
 		if(err){
@@ -41,7 +41,7 @@ exports.getProductById = function(prodId, callBack){
 
 exports.getProductsByName = function(prodName, callBack){
 	var prodName = mysql.escape('%' + prodName + '%');
-	var sql = "SELECT * FROM products WHERE prod_name LIKE" + prodName + " AND \
+	var sql = "SELECT prod_id as id, prod_name AS name, unit_price AS price, prod_cat AS cat, DATE(arr_date) AS arrival, age_range AS age FROM products WHERE prod_name LIKE" + prodName + " AND \
 	discontinued IS FALSE";
 
 	dbConn.query(sql, function(err, result){
