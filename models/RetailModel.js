@@ -33,7 +33,8 @@ exports.createVoucher = function(voucher, callBack){
 }
 
 exports.findVoucher = function(voucher_id, callBack){
-	var sql = "SELECT * FROM voucher WHERE vouch_id=?";
+	var sql = "SELECT voucher.*, branch.branch_name FROM voucher,branch WHERE vouch_id=?\
+	AND branch.branch_id = voucher.issued_branch";
 
 	dbConn.query(sql, [voucher_id], function(err, result){
 		if(err){
