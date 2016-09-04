@@ -56,3 +56,41 @@ exports.claimVoucher = function(voucher_id, callBack){
 		callBack(result);
 	});
 }
+
+exports.updateInventoryLevel = function(newLevel, callBack){
+	var sql = "SELECT * FROM inventory WHERE branch_id=? AND product_id=?";
+
+	dbConn.query(sql, [ newLevel.branchId, newLevel.prodId ], function(err, result){
+		if(err){
+			console.log(err);
+			return;
+		}
+
+		if(result.length == 0){
+			console.log('Inerting new...');
+
+			var createLevel = "INSERT INTO inventory VALUE (?, ?, ?)";
+
+			dbConn.query(createLevel, [newLevel.branchId, newLevel.prodId, newLevel.level], function(err, result){
+				if(err){
+					console.log(err);
+					return;
+				}
+				callBack(result);
+			});
+		}
+		else{
+		console.log('Updating...');
+
+		sql = "UPDATE inventory SET product_level=? WHERE branch_id=? AND product_id=?";
+
+		dbConn.query(sql, [newLevel.level, newLevel.branchId, newLevel.prodId], function(err, result){
+			if(err){
+				console.log(err);
+				return;
+			}
+			callBack(result);
+		});
+		}
+	});
+}
