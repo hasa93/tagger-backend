@@ -53,6 +53,30 @@ exports.getProductsByName = function(prodName, callBack){
 	});
 }
 
+exports.getProductByTag = function(tagId, callBack){
+	var tagQuery = "SELECT prod_id FROM tag_map WHERE tag_uid=?";
+
+	dbConn.query(tagQuery, [tagId], function(err, result){
+		if(err){
+			console.log(err);
+			return;
+		}
+		callBack(result);
+	});
+}
+
+exports.insertProductTag = function(productTag, callBack){
+	var sql = "INSERT INTO tag_map VALUE (?, ?)";
+
+	dbConn.query(sql, [productTag.uid, productTag.prodId], function(err, result){
+		if(err){
+			console.log(err);
+			return;
+		}
+		callBack(result);
+	});
+}
+
 exports.updateProduct = function(product, callBack){
 	var sql = "UPDATE products SET prod_name=?, unit_price=? WHERE prod_id=?";
 

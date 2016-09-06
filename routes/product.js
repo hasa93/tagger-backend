@@ -41,4 +41,11 @@ router.post('/insert', function(req, res){
 	});
 });
 
+router.post('/insert/tag', function(req, res){
+	var productTag = req.body;
+	productModel.insertProductTag(productTag, function(result){
+		res.json(result);
+	});
+});
+
 module.exports = router;
