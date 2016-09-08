@@ -10,6 +10,13 @@ var product = require('./routes/product');
 var retail = require('./routes/retail');
 
 var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+
+io.on('connection', function(socket){
+  console.log("User connected...");
+  socket.emit("hello", { text: "yo dude!"});
+});
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -58,7 +65,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
-app.listen(3000, function(){
+server.listen(3000, function(){
   console.log("Listening on 3000...");
 });
 
