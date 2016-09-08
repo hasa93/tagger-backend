@@ -21,7 +21,7 @@ exports.createStaffMember = function(staffMember, callBack){
 	var sql = "INSERT INTO staff (staff_fname, staff_lname, staff_type, staff_contact)\
 		VALUES (?, ?, ?, ?)";
 
-	dbConn.query(sql, [staffMember.fname, staffMember.lname, staffMember.type, staffMember.contact], 
+	dbConn.query(sql, [staffMember.fname, staffMember.lname, staffMember.type, staffMember.contact],
 		function(err, result){
 			if(err) console.log(err);
 			staffMember.staff_id = result.insertId;
@@ -57,8 +57,9 @@ exports.searchStaffByName = function(name, callBack){
 	console.log("Looking for staff member " + name);
 	var name = mysql.escape('%' + name + '%');
 
-	var sql = "SELECT * FROM staff WHERE staff_fname LIKE " + name +" OR staff_lname LIKE " + name;
-	console.log(sql);
+	var sql = "SELECT staff.staff_id AS id, staff.staff_type AS type, staff.staff_fname AS fname,\
+	staff.staff_lname AS lname, staff.staff_contact AS contact, staff.branch_id AS branchId,\
+	logins.uname FROM staff INNER JOIN logins ON logins.staff_id=staff.staff_id WHERE staff.staff_fname LIKE " + name +" OR staff.staff_lname LIKE " + name;
 
 	dbConn.query(sql, function(err, result){
 		if(err) console.log(err);
