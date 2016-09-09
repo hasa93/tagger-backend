@@ -77,10 +77,13 @@ exports.insertProductTag = function(productTag, callBack){
 	});
 }
 
-exports.updateProduct = function(product, callBack){
-	var sql = "UPDATE products SET prod_name=?, unit_price=? WHERE prod_id=?";
+exports.updateProduct = function(prodId, delta, callBack){
+	console.log(delta);
 
-	dbConn.query(sql, [product.name, product.price, product.id], function(err, result){
+	var sql = "UPDATE products SET prod_name=?, unit_price=?, age_range=?,\
+	prod_cat=?, arr_date=? WHERE prod_id=?";
+
+	dbConn.query(sql, [delta.name, delta.price, delta.age, delta.cat, delta.arrival, prodId], function(err, result){
 		if(err){
 			console.log(err);
 			return;

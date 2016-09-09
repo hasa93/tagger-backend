@@ -48,4 +48,13 @@ router.post('/insert/tag', function(req, res){
 	});
 });
 
+router.post('/update/:id', function(req, res){
+	var updateData = req.body;
+	var prodId = req.params.id;
+
+	productModel.updateProduct(prodId, updateData, function(result){
+		res.json(result);
+	});
+});
+
 module.exports = router;
