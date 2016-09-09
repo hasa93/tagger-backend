@@ -89,6 +89,7 @@ CREATE TABLE `inventory` (
 
 LOCK TABLES `inventory` WRITE;
 /*!40000 ALTER TABLE `inventory` DISABLE KEYS */;
+INSERT INTO `inventory` VALUES (1,1,1000),(1,3,400),(1,4,500),(2,5,5540);
 /*!40000 ALTER TABLE `inventory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -136,7 +137,7 @@ CREATE TABLE `logins` (
   KEY `fk_CustLogin` (`cust_id`),
   CONSTRAINT `fk_CustLogin` FOREIGN KEY (`cust_id`) REFERENCES `customer` (`cust_id`) ON DELETE CASCADE,
   CONSTRAINT `fk_StaffLogin` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -145,7 +146,7 @@ CREATE TABLE `logins` (
 
 LOCK TABLES `logins` WRITE;
 /*!40000 ALTER TABLE `logins` DISABLE KEYS */;
-INSERT INTO `logins` VALUES (1,'codon@baby','7402411f9090581314be0304d5d1b9d95d6f4079',2,NULL),(3,'hagen@baby','4d5bb2d32024e62584022f82eb016d5f4634880b',NULL,1),(4,'jhl@baby','6794d21b82ccbc26c3c80f0d4976a76ab0446ad7',4,NULL),(5,'kowalski@baby','f56f228a1bfbb14683b61a1e3b42f3eaa3c58d81',6,NULL),(6,'harlem@baby','a9b9f1fd61015b368e60e370d4a45629dc6c0b40',7,NULL),(7,'master@baby','4f26aeafdb2367620a393c973eddbe8f8b846ebd',NULL,NULL);
+INSERT INTO `logins` VALUES (1,'codon@baby','7402411f9090581314be0304d5d1b9d95d6f4079',2,NULL),(3,'hagen@baby','4d5bb2d32024e62584022f82eb016d5f4634880b',NULL,1),(4,'jhl@baby','6794d21b82ccbc26c3c80f0d4976a76ab0446ad7',4,NULL),(5,'kowalski@baby','f56f228a1bfbb14683b61a1e3b42f3eaa3c58d81',6,NULL),(6,'harlem@baby','a9b9f1fd61015b368e60e370d4a45629dc6c0b40',7,NULL),(7,'master@baby','4f26aeafdb2367620a393c973eddbe8f8b846ebd',NULL,NULL),(8,'enid@baby','a17b0df349245a2d8516dce05de86d7c7889cb2c',9,NULL),(9,'john@baby','e851ceec80c23cc168884d85b1f9b0251c07ad76',10,NULL);
 /*!40000 ALTER TABLE `logins` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -174,8 +175,31 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (1,'Gk Pacifier',120,'SNTR',NULL,'ANY',0),(2,'Navy Blue Top',4300,'CLTH',NULL,'ANY',0),(3,'RC Drone 4Q',12500,'TOYS',NULL,'ANY',1),(4,'Boys bright tshirts',1300,'CLOT',NULL,'ANY',0),(5,'Boys jersy pull on shorts',1200,'CLOT',NULL,'ANY',0),(6,'Boys heritage jersy',1300,'CLOT',NULL,'ANY',0),(7,'Adidas baby logo crew suit',2200,'CLOT',NULL,'ANY',0),(8,'Adidas original baby boy t-shirt',1500,'CLOT',NULL,'ANY',0),(9,'Boys denim shorts',1300,'CLOT',NULL,'ANY',0),(10,'Boys tops',1100,'CLOT',NULL,'ANY',0),(11,'Graco Baby Breeze Stroller',42,'OTHE','2016-09-01','ANY',0),(12,'Varsity Puffer',2471.96,'CLOT','2016-09-01','5Y-9Y',0),(13,'kk',0,NULL,'2016-09-02','ANY',0);
+INSERT INTO `products` VALUES (1,'Gk Pacifier',120,'SNTR','2016-09-04','ANY',0),(2,'Navy Blue Top',4300,'CLTH','2016-09-04','ANY',0),(3,'RC Drone 4Q',12500,'TOYS','2016-09-04','ANY',1),(4,'Boys bright tshirts',1300,'CLOT','2016-09-04','ANY',0),(5,'Boys jersy pull on shorts',1200,'CLOT','2016-09-04','ANY',0),(6,'Boys heritage jersy',1300,'CLOT','2016-09-04','ANY',0),(7,'Camero baby logo crew suit',2200,'CLOT','2016-09-03','1Y-5Y',0),(8,'Adidas original baby boy t-shirt',5400,'CLOT','2016-09-02','ANY',0),(9,'Boys denim shorts',1300,'CLOT','2016-09-04','ANY',0),(10,'Boys tops',1100,'CLOT','2016-09-04','ANY',0),(11,'Graco Baby Breeze Stroller',42,'OTHE','2016-09-01','ANY',0),(12,'Varsity Puffer',2471.96,'CLOT','2016-09-01','5Y-9Y',0),(13,'kk',0,NULL,'2016-09-03','ANY',0);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sales_records`
+--
+
+DROP TABLE IF EXISTS `sales_records`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sales_records` (
+  `product_id` int(11) NOT NULL,
+  `invoice_id` int(11) NOT NULL,
+  PRIMARY KEY (`product_id`,`invoice_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sales_records`
+--
+
+LOCK TABLES `sales_records` WRITE;
+/*!40000 ALTER TABLE `sales_records` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sales_records` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -190,12 +214,12 @@ CREATE TABLE `staff` (
   `staff_type` char(3) DEFAULT NULL,
   `staff_fname` varchar(15) DEFAULT NULL,
   `staff_lname` varchar(15) DEFAULT NULL,
-  `staff_contact` varchar(10) DEFAULT NULL,
+  `staff_contact` varchar(10) DEFAULT 'N/A',
   `branch_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`staff_id`),
   KEY `fk_BranchKey` (`branch_id`),
   CONSTRAINT `fk_BranchKey` FOREIGN KEY (`branch_id`) REFERENCES `branch` (`branch_id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -204,7 +228,7 @@ CREATE TABLE `staff` (
 
 LOCK TABLES `staff` WRITE;
 /*!40000 ALTER TABLE `staff` DISABLE KEYS */;
-INSERT INTO `staff` VALUES (2,'mgr','Michael','Coroleone','0115559031',NULL),(4,'csh','John','Langdon',NULL,NULL),(6,'csh','Nathan','Kowalski','0115559031',NULL),(7,'csh','Harlem','Channing','0115559031',NULL),(8,'mst','MASTER',NULL,NULL,NULL);
+INSERT INTO `staff` VALUES (2,'mgr','Michael','Coroleone','0115559031',NULL),(4,'csh','John','Langdon','N/A',NULL),(6,'csh','Nathan','Kowalski','0115559031',NULL),(7,'csh','Harlem','Channing','0115559031',NULL),(8,'mst','MASTER',NULL,'N/A',NULL),(9,'csh','Enid','Litsnikov','0112500988',NULL),(10,'csh','John','Spitzer','N/A',NULL);
 /*!40000 ALTER TABLE `staff` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -216,8 +240,8 @@ DROP TABLE IF EXISTS `tag_map`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tag_map` (
-  `tag_uid` varchar(8) NOT NULL,
-  `prod_id` char(5) DEFAULT NULL,
+  `tag_uid` varchar(16) NOT NULL,
+  `prod_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`tag_uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -228,7 +252,7 @@ CREATE TABLE `tag_map` (
 
 LOCK TABLES `tag_map` WRITE;
 /*!40000 ALTER TABLE `tag_map` DISABLE KEYS */;
-INSERT INTO `tag_map` VALUES ('53918F01','00001'),('7334F401','00002'),('85B7DF52','00003');
+INSERT INTO `tag_map` VALUES ('04046012F94881',5),('04206012F94881',4),('04396012F94881',4),('53918F01',1),('7334F401',2),('840F9535',5),('85B7DF52',3);
 /*!40000 ALTER TABLE `tag_map` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -255,7 +279,7 @@ CREATE TABLE `voucher` (
 
 LOCK TABLES `voucher` WRITE;
 /*!40000 ALTER TABLE `voucher` DISABLE KEYS */;
-INSERT INTO `voucher` VALUES (3,1,1000.00,'2016-08-18 04:27:13','2016-10-30'),(4,NULL,2000.00,'2016-08-18 18:09:08','2016-08-29'),(5,NULL,5000.00,'2016-08-26 20:47:24','2016-08-28'),(6,NULL,5600.00,'2016-09-03 04:23:08','2016-09-04');
+INSERT INTO `voucher` VALUES (3,1,1000.00,'2016-08-18 04:27:13','2016-10-30'),(4,2,2000.00,'2016-08-18 18:09:08','2016-08-29'),(5,2,5000.00,'2016-08-26 20:47:24','2016-08-28'),(6,2,5600.00,'2016-09-03 04:23:08','2016-09-04');
 /*!40000 ALTER TABLE `voucher` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -268,4 +292,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-09-03 13:15:20
+-- Dump completed on 2016-09-09 23:47:53
