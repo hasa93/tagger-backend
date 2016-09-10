@@ -54,7 +54,7 @@ exports.getProductsByName = function(prodName, callBack){
 }
 
 exports.getProductByTag = function(tagId, callBack){
-	var tagQuery = "SELECT prod_id FROM tag_map WHERE tag_uid=?";
+	var tagQuery = "SELECT prod_id AS prodId FROM tag_map WHERE tag_uid=?";
 
 	dbConn.query(tagQuery, [tagId], function(err, result){
 		if(err){
