@@ -33,4 +33,11 @@ router.post('/inventory/update', function(req, res){
 	});
 });
 
+router.post('/create/invoice', function(req, res){
+	var ticket = req.body;
+	retailModel.createInvoice(ticket, function(result){
+		res.json(result);
+	})
+});
+
 module.exports = router;

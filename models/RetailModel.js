@@ -94,3 +94,32 @@ exports.updateInventoryLevel = function(newLevel, callBack){
 		}
 	});
 }
+
+exports.createInvoice = function(ticket, callBack){
+	var invoiceQuery = "INSERT INTO invoices (invoice_total, voucher_id, branch_id)\
+	VALUES (?, ?, ?)";
+
+	dbConn.query(invoiceQuery, [ticket.total, ticket.voucherId, ticket.branchId], function(err, result){
+		if(err){
+			console.log(err);
+			return;
+		}
+
+		var invoiceId = result.insertId;
+
+		var salesQuery = "INSERT INTO sales_records VALUES (?, ?, ?)";
+
+		for(var i = 0; i < ticket.products.length; i++){
+			var product = ticket.products[i];
+
+			dbConn.query(salesQuery, [product.id, invoiceId, product.qty], function(err, result){
+				if(err){
+					console.log(err);
+					return;
+				}
+			});
+		}
+
+		callBack(result);
+	});
+}
