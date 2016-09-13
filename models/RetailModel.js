@@ -23,7 +23,7 @@ exports.createVoucher = function(voucher, callBack){
 	var sql = "INSERT INTO voucher (issued_branch, vouch_amount, exp_date)\
 	VALUES (?, ?, ?)";
 
-	dbConn.query(sql, [voucher.branch, voucher.amount, voucher.expiry], function(err, result){
+	dbConn.query(sql, [voucher.branchId, voucher.amount, voucher.expiry], function(err, result){
 		if(err){
 			console.log(err);
 			return;
