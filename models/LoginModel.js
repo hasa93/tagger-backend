@@ -6,10 +6,10 @@ exports.getStaffMember = function(user, callBack){
 
 	user.passwd = sha1(user.passwd);
 
-	var sql = "SELECT logins.uname, staff.staff_id, staff.staff_fname, staff.staff_lname, staff.staff_type\
+	var loginQuery = "SELECT logins.uname, staff.staff_id, staff.staff_fname, staff.staff_lname, staff.staff_type\
 	FROM logins, staff WHERE logins.uname=? AND logins.passwd=? AND logins.staff_id=staff.staff_id";
 
-	dbConn.query(sql, [user.uname, user.passwd], function(err, result){
+	dbConn.query(loginQuery, [user.uname, user.passwd], function(err, result){
 		if(err){
 			callBack({
 				status: "ERROR",

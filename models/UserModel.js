@@ -5,9 +5,9 @@ var dbConn = require('../sqlConn');
 exports.createLogin = function(user, callBack){
 	console.log(user);
 
-	var query = "INSERT INTO logins (uname, passwd, staff_id, cust_id) VALUES (?, ?, ?, ?)";
+	var createQuery = "INSERT INTO logins (uname, passwd, staff_id, cust_id) VALUES (?, ?, ?, ?)";
 
-	dbConn.query(query, [user.uname, user.passwd, user.staff_id, user.cust_id],
+	dbConn.query(createQuery, [user.uname, user.passwd, user.staff_id, user.cust_id],
 		function(err, result){
 			if(err) console.log(err);
 			result.user = user;
@@ -16,20 +16,35 @@ exports.createLogin = function(user, callBack){
 }
 
 exports.createStaffMember = function(staffMember, callBack){
+	console.log("Creating Staff...");
 	staffMember.passwd = sha1(staffMember.passwd);
 
-	var sql = "INSERT INTO staff (staff_fname, staff_lname, staff_type, staff_contact)\
+	var insertQuery = "INSERT INTO staff (staff_fname, staff_lname, staff_type, staff_contact)\
 		VALUES (?, ?, ?, ?)";
+	var existQuery = "SELECT uname FROM logins WHERE uname=?";
 
-	dbConn.query(sql, [staffMember.fname, staffMember.lname, staffMember.type, staffMember.contact],
-		function(err, result){
-			if(err) console.log(err);
-			staffMember.staff_id = result.insertId;
-			console.log(staffMember);
+	dbConn.query(existQuery, [staffMember.uname], function(err, result){
+		if(err){
+			console.log(err);
+			return;
+		}
 
-			exports.createLogin(staffMember, function(result){
-				callBack(result);
-			});
+		if(result.length != 0){
+			console.log("User Exists");
+			callBack({ status: "ERROR", message: "User Exists" });
+			return;
+		}
+
+		dbConn.query(insertQuery, [staffMember.fname, staffMember.lname, staffMember.type, staffMember.contact],
+			function(err, result){
+				if(err) console.log(err);
+				staffMember.staff_id = result.insertId;
+				console.log(staffMember);
+
+				exports.createLogin(staffMember, function(result){
+					callBack(result);
+				});
+		});
 	});
 }
 
