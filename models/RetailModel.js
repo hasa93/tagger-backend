@@ -96,10 +96,10 @@ exports.updateInventoryLevel = function(newLevel, callBack){
 }
 
 exports.createInvoice = function(ticket, callBack){
-	var invoiceQuery = "INSERT INTO invoices (invoice_total, voucher_id, branch_id)\
+	var invoiceQuery = "INSERT INTO invoices (invoice_total, voucher_amount, branch_id)\
 	VALUES (?, ?, ?)";
 
-	dbConn.query(invoiceQuery, [ticket.total, ticket.voucherId, ticket.branchId], function(err, result){
+	dbConn.query(invoiceQuery, [ticket.total, ticket.voucherAmount, ticket.branchId], function(err, result){
 		if(err){
 			console.log(err);
 			return;
