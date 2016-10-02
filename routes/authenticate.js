@@ -6,6 +6,21 @@ var router = express.Router();
 var loginModel = require('../models/LoginModel');
 var appSecret = require('../config').secret;
 
+var authenticator = function(req, res, next){
+  var token = req.headers.token;
+
+  jwt.verify(token, appSecret, function(err, payload){
+		if(err || payload.type != 'mgr'){
+			res.json({
+				status: "ERROR",
+				message: err
+			});
+			return;
+		}
+		next();
+	});
+}
+
 router.post('/authenticate', function(req, res){
 	var token = req.body.token;
 
