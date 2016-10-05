@@ -5,6 +5,7 @@ var jwt = require('jsonwebtoken');
 var appSecret = require('../config').secret;
 
 var authenticator = function(req, res, next){
+  console.log(req.headers);
   var token = req.headers.token;
 
   jwt.verify(token, appSecret, function(err, payload){
