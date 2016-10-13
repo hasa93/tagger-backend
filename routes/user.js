@@ -29,8 +29,9 @@ router.post('/create/staff', authenticator, function(req, res){
 	})
 });
 
-router.post('/create/customer', authenticator, function(req, res){
+router.post('/create/customer', function(req, res){
 	var customer = req.body;
+	console.log(req.body);
 
 	userModel.createCustomer(customer, function(result){
 		result.customer = customer;

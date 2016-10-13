@@ -49,23 +49,41 @@ exports.createStaffMember = function(staffMember, callBack){
 }
 
 exports.createCustomer = function(customer, callBack){
+	console.log("Creating customer...");
 	customer.passwd = sha1(customer.passwd);
 
-	var conn = this;
+	console.log(customer);
 
 	var sql = "INSERT INTO customer (cust_fname, cust_lname, cust_cat, cust_contact, cust_addr) \
 	VALUES (?, ?, ?, ?, ?)";
 
-	conn.connection.query(sql, [customer.fname, customer.lname, customer.cat, customer.contact, customer.addr],
-		function(err, result){
-			if(err) console.log(err);
-			customer.cust_id = result.insertId;
+	var existQuery = "SELECT uname FROM logins WHERE uname=?";
 
-			conn.createLogin(customer, function(result){
-				callBack(result);
-			})
+	dbConn.query(existQuery, [customer.uname], function(err, result){
+		console.log("Running query...");
+
+		if(err){
+			console.log(err);
+			return;
 		}
-	);
+
+		if(result.length != 0){
+			console.log("User Exists");
+			callBack({ status: "ERROR", message: "User Exists" });
+			return;
+		}
+
+		dbConn.query(sql, [customer.fname, customer.lname, customer.cat, customer.contact, customer.addr],
+			function(err, result){
+				if(err) console.log(err);
+				customer.cust_id = result.insertId;
+
+				exports.createLogin(customer, function(result){
+					callBack(result);
+				})
+			}
+		);
+	});
 }
 
 exports.searchStaffByName = function(name, callBack){

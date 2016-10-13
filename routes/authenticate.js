@@ -72,4 +72,35 @@ router.post('/staff', function(req, res){
 	});
 });
 
+router.post('/customer', function(req, res){
+
+	var user = req.body;
+
+	var issueToken = function(payload){
+		jwt.sign(payload, appSecret, { issuer: 't35-api'}, function(err, token){
+			if(err){
+				res.json({
+					status: "ERROR",
+					message: err
+				});
+				return;
+			}
+
+			res.json({
+				status: "OK",
+				token: token,
+				profile: payload
+			});
+		});
+	}
+
+	loginModel.getCustomer(user, function(profile){
+		if(profile.status === 'ERROR'){
+			res.json(profile);
+			return;
+		}
+
+		issueToken(profile);
+	});
+});
 module.exports = router;
