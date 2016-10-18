@@ -6,18 +6,21 @@ var router = express.Router();
 var loginModel = require('../models/LoginModel');
 var appSecret = require('../config').secret;
 
-var authenticator = function(req, res, next){
-  var token = req.headers.token;
-
-  jwt.verify(token, appSecret, function(err, payload){
-		if(err || payload.type != 'mgr'){
+var issueToken = function(payload, response){
+	jwt.sign(payload, appSecret, { issuer: 't35-api'}, function(err, token){
+		if(err){
 			res.json({
 				status: "ERROR",
 				message: err
 			});
 			return;
 		}
-		next();
+
+		response.json({
+			status: "OK",
+			token: token,
+			profile: payload
+		});
 	});
 }
 
@@ -44,31 +47,13 @@ router.post('/staff', function(req, res){
 
 	var user = req.body;
 
-	var issueToken = function(payload){
-		jwt.sign(payload, appSecret, { issuer: 't35-api'}, function(err, token){
-			if(err){
-				res.json({
-					status: "ERROR",
-					message: err
-				});
-				return;
-			}
-
-			res.json({
-				status: "OK",
-				token: token,
-				profile: payload
-			});
-		});
-	}
-
 	loginModel.getStaffMember(user, function(profile){
 		if(profile.status === 'ERROR'){
 			res.json(profile);
 			return;
 		}
 
-		issueToken(profile);
+		issueToken(profile, res);
 	});
 });
 
@@ -76,31 +61,13 @@ router.post('/customer', function(req, res){
 
 	var user = req.body;
 
-	var issueToken = function(payload){
-		jwt.sign(payload, appSecret, { issuer: 't35-api'}, function(err, token){
-			if(err){
-				res.json({
-					status: "ERROR",
-					message: err
-				});
-				return;
-			}
-
-			res.json({
-				status: "OK",
-				token: token,
-				profile: payload
-			});
-		});
-	}
-
 	loginModel.getCustomer(user, function(profile){
 		if(profile.status === 'ERROR'){
 			res.json(profile);
 			return;
 		}
 
-		issueToken(profile);
+		issueToken(profile, res);
 	});
 });
 module.exports = router;
