@@ -123,3 +123,25 @@ exports.createInvoice = function(ticket, callBack){
 		callBack(result);
 	});
 }
+
+exports.getAllSales = function(startDate, endDate, callBack){
+	var sql = "SELECT DATE(invoices.invoice_date) AS date, SUM(sales_records.qty) AS qty\
+			   FROM invoices INNER JOIN sales_records ON invoices.invoice_id=sales_records.invoice_id\
+			   GROUP BY DATE(invoices.invoice_date)";
+
+	dbConn.query(sql, function(err, result){
+		if(err){
+			console.log(err);
+			return;
+		}
+
+		filtered = [];
+		for(var i = 0; i < result.length; i++){
+			if(result[i].date.toJSON() >= startDate && result[i].date.toJSON() <= endDate){
+				filtered.push(result[i]);
+			}
+		}
+
+		callBack(filtered);
+	});
+}

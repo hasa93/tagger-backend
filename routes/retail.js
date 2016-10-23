@@ -98,4 +98,12 @@ router.post('/create/invoice', staffAuthenticator, function(req, res){
 	})
 });
 
+router.post('/stat/sales/all', function(req, res){
+	var dateRange = req.body;
+
+	retailModel.getAllSales(dateRange.start, dateRange.end, function(result){
+		res.json(result);
+	})
+});
+
 module.exports = router;
