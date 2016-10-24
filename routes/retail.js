@@ -106,4 +106,13 @@ router.post('/stat/sales/all', function(req, res){
 	})
 });
 
+router.post('/stat/sales/id/:id', function(req, res){
+	var dateRange = req.body;
+	var prodId = req.params.id;
+
+	retailModel.getSalesById(dateRange.start, dateRange.end, prodId, function(result){
+		res.json(result);
+	})
+});
+
 module.exports = router;
