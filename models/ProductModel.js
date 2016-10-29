@@ -116,3 +116,16 @@ exports.insertProduct = function(product, callBack){
 		callBack(result);
 	});
 }
+
+exports.getMostRecentProducts = function(count, callBack){
+	var sql = "SELECT prod_name AS prodName, unit_price AS price, arr_date AS date\
+					  age_range AS ageRange FROM products ORDER BY (arr_date) LIMIT ?";
+
+	dbConn.query(sql, [count], function(err, result){
+		if(err){
+			console.log(err);
+			return;
+		}
+		callBack(result);
+	});
+}
