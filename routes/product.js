@@ -1,8 +1,6 @@
 var express = require('express');
 var productModel = require('../models/ProductModel');
 var router = express.Router();
-var jwt = require('jsonwebtoken');
-var appSecret = require('../config').secret;
 var authenticator = require('./authenticator');
 
 router.get('/list', authenticator.authenticateStaff, function(req, res){
@@ -56,6 +54,14 @@ router.post('/update/:id', authenticator.authenticateAdmin, function(req, res){
 	var prodId = req.params.id;
 
 	productModel.updateProduct(prodId, updateData, function(result){
+		res.json(result);
+	});
+});
+
+router.post('/new/arrivals', function(req, res){
+	var counts = req.body.count;
+
+	productModel.getMostRecentProducts(counts, function(result){
 		res.json(result);
 	});
 });
