@@ -66,4 +66,12 @@ router.post('/new/arrivals', function(req, res){
 	});
 });
 
+router.post('/get/flagged', function(req, res){
+	var custId = req.body.custId;
+
+	productModel.getFlags(custId, function(result){
+		res.json(result);
+	});
+});
+
 module.exports = router;

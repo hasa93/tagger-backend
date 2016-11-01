@@ -131,3 +131,16 @@ exports.getMostRecentProducts = function(count, callBack){
 		callBack(result);
 	});
 }
+
+exports.getFlags = function(custId, callBack){
+
+	var sql = "SELECT cust_id AS custId, prod_id AS prodId FROM flags WHERE cust_id=?";
+
+	dbConn.query(sql, [custId], function(err, result){
+		if(err){
+			console.log(err);
+			return;
+		}
+		callBack(result);
+	});
+}

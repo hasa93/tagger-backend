@@ -168,3 +168,15 @@ exports.getSalesById = function(startDate, endDate, prodId, callBack){
 		callBack(filtered);
 	});
 }
+
+exports.flagProduct = function(prodId, custId, callBack){
+	var sql = "INSERT INTO flags (prod_id, cust_id) VALUES (?, ?)";
+
+	dbConn.query(sql, [prodId, custId], function(err, result){
+		if(err){
+			console.log(err);
+			return;
+		}
+		callBack(result);
+	});
+}

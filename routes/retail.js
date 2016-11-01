@@ -58,4 +58,12 @@ router.post('/stat/sales/id/:id', authenticator.authenticateAdmin, function(req,
 	})
 });
 
+router.post('/flag', function(req, res){
+	var flag = req.body;
+
+	retailModel.flagProduct(flag.prodId, flag.custId, function(result){
+		res.json(result);
+	});
+});
+
 module.exports = router;
