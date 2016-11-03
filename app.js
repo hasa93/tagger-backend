@@ -3,6 +3,7 @@
 var express = require('express');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
+var uploader = require('./uploader');
 
 var authenticator = require('./routes/authenticate');
 var user = require('./routes/user');
@@ -12,6 +13,18 @@ var retail = require('./routes/retail');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+var appRouter = express.Router();
+
+appRouter.post('/upload', function(req, res){
+    console.log("Called upload...");
+    uploader(req, res, function(err){
+      if(err){
+        console.log(err);
+        res.json({ status: "Upload Failed" });
+      }
+      res.json({ status: "Starting File Upload..." });
+    });
+});
 
 io.on('connection', function(socket){
   console.log("User connected...");
@@ -33,6 +46,7 @@ app.use('/api/login', authenticator);
 app.use('/api/user', user);
 app.use('/api/product', product);
 app.use('/api/retail', retail);
+app.use('/api', appRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
