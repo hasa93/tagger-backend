@@ -46,7 +46,7 @@ exports.authenticateAdmin = function(req, res, next){
 }
 
 exports.authenticateStaff = function(req, res, next){
-	verifyToken(adminAuthenticator, req, res, next);
+	verifyToken(staffAuthenticator, req, res, next);
 }
 
 exports.authenticateMaster = function(req, res, next){
