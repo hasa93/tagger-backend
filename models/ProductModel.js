@@ -1,5 +1,6 @@
 var mysql = require('mysql');
 var dbConn = require('../sqlConn');
+var fs = require('fs');
 
 exports.getProductList = function(callBack){
 	var sql = "SELECT * FROM products WHERE discontinued IS FALSE";
@@ -22,7 +23,15 @@ exports.getProductByTag = function(prodUid, callBack){
 			console.log(err);
 			return;
 		}
-		callBack(result);
+
+		console.log(result[0].prod_image);
+
+		fs.readFile(result[0].prod_image, function(err, file){
+			var b64 = new Buffer(file).toString('base64');
+			result[0].prod_image = b64;
+			callBack(result);
+		});
+
 	});
 }
 
@@ -45,18 +54,6 @@ exports.getProductsByName = function(prodName, callBack){
 	discontinued IS FALSE";
 
 	dbConn.query(sql, function(err, result){
-		if(err){
-			console.log(err);
-			return;
-		}
-		callBack(result);
-	});
-}
-
-exports.getProductByTag = function(tagId, callBack){
-	var tagQuery = "SELECT prod_id AS prodId FROM tag_map WHERE tag_uid=?";
-
-	dbConn.query(tagQuery, [tagId], function(err, result){
 		if(err){
 			console.log(err);
 			return;

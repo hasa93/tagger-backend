@@ -2,6 +2,7 @@ var express = require('express');
 var productModel = require('../models/ProductModel');
 var router = express.Router();
 var authenticator = require('./authenticator');
+var fs = require('fs');
 
 router.get('/list', authenticator.authenticateStaff, function(req, res){
 	productModel.getProductList(function(list){
@@ -58,6 +59,7 @@ router.post('/update/:id', authenticator.authenticateAdmin, function(req, res){
 	});
 });
 
+//Protect these routes before deployment
 router.post('/new/arrivals', function(req, res){
 	var counts = req.body.count;
 
