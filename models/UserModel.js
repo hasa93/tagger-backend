@@ -119,3 +119,17 @@ exports.updateStaffDetails = function(staffId, staffMember, callBack){
 			callBack(result);
 	});
 }
+
+exports.updateCustomerDetails = function(customer, callBack){
+	var sql = "UPDATE customer SET (cust_fname, cust_lname, cust_contact, cust_addr)\
+	(?, ?, ?, ?) WHERE cust_id=?";
+
+	dbConn.query(sql, [customer.fname, customer.lname, customer.contact, customer.address, customer.id],
+		function(err, result){
+			if(err){
+				console.log(err);
+				return;
+			}
+		callBack(result);
+	});
+}
