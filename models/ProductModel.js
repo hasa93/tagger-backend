@@ -115,10 +115,11 @@ exports.insertProduct = function(product, callBack){
 }
 
 exports.getMostRecentProducts = function(count, callBack){
-	var count = mysql.escape(count);
 	console.log(parseInt(count));
 	var sql = "SELECT prod_name AS prodName, unit_price AS price, arr_date AS date,\
-					  age_range AS ageRange FROM products ORDER BY(arr_date) DESC LIMIT " + parseInt(count);
+					  age_range AS ageRange, prod_image AS prodImage FROM products ORDER BY(arr_date) DESC LIMIT " + parseInt(count);
+
+	console.log(sql);
 
 	dbConn.query(sql, function(err, result){
 		if(err){

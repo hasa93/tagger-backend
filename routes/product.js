@@ -60,9 +60,9 @@ router.post('/update/:id', authenticator.authenticateAdmin, function(req, res){
 });
 
 //Protect these routes before deployment
-router.post('/new/arrivals', function(req, res){
-	var counts = req.body.count;
-
+router.get('/new/arrivals/:count', function(req, res){
+	var counts = req.params.count;
+	console.log(counts);
 	productModel.getMostRecentProducts(counts, function(result){
 		res.json(result);
 	});
