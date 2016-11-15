@@ -19,7 +19,7 @@ exports.createStaffMember = function(staffMember, callBack){
 	console.log("Creating Staff...");
 	staffMember.passwd = sha1(staffMember.passwd);
 
-	var insertQuery = "INSERT INTO staff (staff_fname, staff_lname, staff_type, staff_contact)\
+	var insertQuery = "INSERT INTO staff (staff_fname, staff_lname, staff_type, staff_contact, branch_id)\
 		VALUES (?, ?, ?, ?)";
 	var existQuery = "SELECT uname FROM logins WHERE uname=?";
 
@@ -35,7 +35,7 @@ exports.createStaffMember = function(staffMember, callBack){
 			return;
 		}
 
-		dbConn.query(insertQuery, [staffMember.fname, staffMember.lname, staffMember.type, staffMember.contact],
+		dbConn.query(insertQuery, [staffMember.fname, staffMember.lname, staffMember.type, staffMember.contact, staffMember.branchId],
 			function(err, result){
 				if(err) console.log(err);
 				staffMember.staff_id = result.insertId;

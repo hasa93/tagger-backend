@@ -26,7 +26,8 @@ exports.getStaffMember = function(user, callBack){
 				staff_id: result[0].staff_id,
 				fname: result[0].staff_fname,
 				lname: result[0].staff_lname,
-				type: result[0].staff_type
+				type: result[0].staff_type,
+				branch: result[0].branch_id
 			};
 
 			callBack(userProfile);
