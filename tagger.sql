@@ -69,6 +69,30 @@ INSERT INTO `customer` VALUES (1,'Tom','Hagen','reg','0115559031','32, long isla
 UNLOCK TABLES;
 
 --
+-- Table structure for table `flags`
+--
+
+DROP TABLE IF EXISTS `flags`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `flags` (
+  `cust_id` int(11) NOT NULL,
+  `prod_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`cust_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `flags`
+--
+
+LOCK TABLES `flags` WRITE;
+/*!40000 ALTER TABLE `flags` DISABLE KEYS */;
+INSERT INTO `flags` VALUES (6,2),(12,3);
+/*!40000 ALTER TABLE `flags` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `inventory`
 --
 
@@ -167,8 +191,9 @@ CREATE TABLE `products` (
   `age_range` varchar(5) DEFAULT 'ANY',
   `discontinued` tinyint(1) DEFAULT '0',
   `returnable` tinyint(1) DEFAULT '0',
+  `prod_image` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`prod_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -177,7 +202,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (1,'Gk Pacifier',120,'SNTR','2016-09-04','ANY',0,0),(2,'Navy Blue Top',4300,'CLTH','2016-09-04','ANY',0,0),(3,'RC Drone 4Q',12500,'TOYS','2016-09-04','ANY',1,1),(4,'Boys bright tshirts',1300,'CLOT','2016-09-01','ANY',0,0),(5,'Boys jersy pull on shorts',1200,'CLOT','2016-09-04','ANY',0,0),(6,'Boys heritage jersy',1300,'CLOT','2016-09-04','ANY',0,0),(7,'Camero baby logo crew suit',2200,'CLOT','2016-09-03','1Y-5Y',0,0),(8,'Adidas original baby boy t-shirt',5400,'CLOT','2016-08-19','6M-1Y',0,0),(9,'Boys denim shorts',1300,'CLOT','2016-09-04','ANY',0,0),(10,'Boys tops',1100,'CLOT','2016-09-04','ANY',0,0),(11,'Graco Baby Breeze Stroller',42,'OTHE','2016-09-01','ANY',0,0),(12,'Varsity Puffer',2471.96,'CLOT','2016-09-01','5Y-9Y',0,0),(13,'kk',0,NULL,'2016-09-03','ANY',0,0);
+INSERT INTO `products` VALUES (1,'Gk Pacifier',120,'SNTR','2016-09-04','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-three.jpg'),(2,'Navy Blue Top',4300,'CLTH','2016-09-04','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg'),(3,'RC Drone 4Q',12500,'TOYS','2016-09-04','ANY',1,1,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-two.jpg'),(4,'Boys bright tshirts',1300,'CLOT','2016-09-01','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg'),(5,'Boys jersy pull on shorts',1200,'CLOT','2016-09-04','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-two.jpg'),(6,'Boys heritage jersy',1300,'CLOT','2016-09-04','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg'),(7,'Camero baby logo crew suit',2200,'CLOT','2016-09-03','1Y-5Y',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg'),(8,'Adidas original baby boy t-shirt',5400,'CLOT','2016-08-19','6M-1Y',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg'),(9,'Boys denim shorts',1300,'CLOT','2016-09-04','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg'),(10,'Boys tops',1100,'CLOT','2016-09-04','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg'),(11,'Graco Baby Breeze Stroller',42,'OTHE','2016-09-01','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg'),(12,'Varsity Puffer',2471.96,'CLOT','2016-09-01','5Y-9Y',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg'),(17,'Auburn teen shirts - long sleeves',2342.89,'CLOT','2016-10-30','9Y-12',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg');
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -259,7 +284,7 @@ CREATE TABLE `tag_map` (
 
 LOCK TABLES `tag_map` WRITE;
 /*!40000 ALTER TABLE `tag_map` DISABLE KEYS */;
-INSERT INTO `tag_map` VALUES ('04046012F94881',5),('04206012F94881',4),('04396012F94881',4),('53918F01',1),('7334F401',2),('840F9535',5),('85B7DF52',3);
+INSERT INTO `tag_map` VALUES ('04046012F94881',5),('04206012F94881',4),('04396012F94881',4),('53918F01',1),('668E86AB',6),('7334F401',2),('840F9535',5),('85B7DF52',3);
 /*!40000 ALTER TABLE `tag_map` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -299,4 +324,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-10-23 23:36:23
+-- Dump completed on 2016-11-10  7:33:25
