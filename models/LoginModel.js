@@ -6,8 +6,9 @@ exports.getStaffMember = function(user, callBack){
 
 	user.passwd = sha1(user.passwd);
 
-	var loginQuery = "SELECT logins.uname, staff.staff_id, staff.staff_fname, staff.staff_lname, staff.staff_type\
-	FROM logins, staff WHERE logins.uname=? AND logins.passwd=? AND logins.staff_id=staff.staff_id";
+	var loginQuery = "SELECT logins.uname, staff.staff_id, staff.staff_fname, staff.staff_lname, staff.staff_type,\
+	branch.branch_name, branch.branch_id FROM logins INNER JOIN (staff INNER JOIN branch ON staff.branch_id=branch.branch_id)\
+	ON logins.staff_id = staff.staff_id WHERE logins.uname=? AND logins.passwd=?";
 
 	dbConn.query(loginQuery, [user.uname, user.passwd], function(err, result){
 		if(err){
@@ -27,7 +28,8 @@ exports.getStaffMember = function(user, callBack){
 				fname: result[0].staff_fname,
 				lname: result[0].staff_lname,
 				type: result[0].staff_type,
-				branch: result[0].branch_id
+				branchId: result[0].branch_id,
+				branchName: result[0].branch_name
 			};
 
 			callBack(userProfile);
@@ -64,7 +66,7 @@ exports.getCustomer = function(user, callBack){
 			var userProfile = {
 				status: "OK",
 				uname: user.uname,
-				staff_id: result[0].cust_id,
+				cust_id: result[0].cust_id,
 				fname: result[0].cust_fname,
 				lname: result[0].cust_lname,
 				type: result[0].cust_cat
