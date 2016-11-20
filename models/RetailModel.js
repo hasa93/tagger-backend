@@ -28,7 +28,9 @@ exports.createVoucher = function(voucher, callBack){
 			console.log(err);
 			return;
 		}
-		callBack(result);
+
+		voucher.voucherId = result.insertId;
+		callBack(voucher);
 	});
 }
 
