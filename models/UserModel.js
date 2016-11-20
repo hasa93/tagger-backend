@@ -20,7 +20,7 @@ exports.createStaffMember = function(staffMember, callBack){
 	staffMember.passwd = sha1(staffMember.passwd);
 
 	var insertQuery = "INSERT INTO staff (staff_fname, staff_lname, staff_type, staff_contact, branch_id)\
-		VALUES (?, ?, ?, ?)";
+		VALUES (?, ?, ?, ?, ?)";
 	var existQuery = "SELECT uname FROM logins WHERE uname=?";
 
 	dbConn.query(existQuery, [staffMember.uname], function(err, result){
