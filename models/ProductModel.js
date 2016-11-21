@@ -2,8 +2,26 @@ var mysql = require('mysql');
 var dbConn = require('../sqlConn');
 var fs = require('fs');
 
+var convertToB64 = function(product, callBack){
+	fs.readFile(product.image, function(err, file){
+		if(err){
+			console.log(err);
+			return;
+		}
+
+		var b64 = new Buffer(file).toString('base64');
+		product.image = b64;
+		callBack(product);
+	});
+}
+
 exports.getProductList = function(callBack){
-	var sql = "SELECT * FROM products WHERE discontinued IS FALSE";
+	var sql = "SELECT products.prod_name AS name,\
+					  products.prod_id AS id,\
+					  products.prod_cat AS cat,\
+					  products.age_range AS age,\
+					  DATE(products.arr_date) AS date,\
+				FROM products WHERE discontinued IS FALSE";
 
 	dbConn.query(sql, function(err, result){
 		if(err){
@@ -15,18 +33,24 @@ exports.getProductList = function(callBack){
 }
 
 exports.getProductByTag = function(prodUid, callBack){
-	var sql = "SELECT products.* FROM products, tag_map WHERE products.prod_id=tag_map.prod_id\
+	var sql = "SELECT products.prod_name AS name,\
+					  products.prod_id AS id,\
+					  products.prod_cat AS cat,\
+					  products.age_range AS age,\
+					  DATE(products.arr_date) AS date,\
+					  products.prod_image AS image,\
+	 FROM products, tag_map WHERE products.prod_id=tag_map.prod_id\
 	AND tag_map.tag_uid=? AND products.discontinued IS FALSE";
 
 	dbConn.query(sql, [prodUid], function(err, result){
-		if(err){
+		if(err || result.length == 0){
 			console.log(err);
 			return;
 		}
 
-		console.log(result[0].prod_image);
+		console.log(result[0].image);
 
-		fs.readFile(result[0].prod_image, function(err, file){
+		fs.readFile(result[0].image, function(err, file){
 			var b64 = new Buffer(file).toString('base64');
 			result[0].prod_image = b64;
 			callBack(result);
@@ -37,14 +61,23 @@ exports.getProductByTag = function(prodUid, callBack){
 
 exports.getProductById = function(prodId, callBack){
 
-	var sql = "SELECT prod_id as id, prod_name AS name, unit_price AS price, prod_cat AS cat, DATE(arr_date) AS arrival, age_range AS age FROM products WHERE prod_id=? AND discontinued IS FALSE";
+	var sql = "SELECT prod_id as id,\
+					  prod_name AS name,\
+					  unit_price AS price,\
+					  prod_cat AS cat,\
+					  DATE(arr_date) AS arrival,\
+					  age_range AS age\
+					  FROM products WHERE prod_id=? AND discontinued IS FALSE";
 
 	dbConn.query(sql, [prodId], function(err, result){
 		if(err){
 			console.log(err);
 			return;
 		}
-		callBack(result);
+
+		convertToB64(result, function(result){
+			callBack(result);
+		});
 	});
 }
 
@@ -131,7 +164,6 @@ exports.getMostRecentProducts = function(count, callBack){
 }
 
 exports.getFlags = function(custId, callBack){
-
 	var sql = "SELECT cust_id AS custId, prod_id AS prodId FROM flags WHERE cust_id=?";
 
 	dbConn.query(sql, [custId], function(err, result){
