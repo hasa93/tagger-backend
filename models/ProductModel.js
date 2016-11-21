@@ -39,6 +39,7 @@ exports.getProductByTag = function(prodUid, callBack){
 					  products.age_range AS age,\
 					  DATE(products.arr_date) AS date,\
 					  products.prod_image AS image,\
+					  products.unit_price AS price\
 	 FROM products, tag_map WHERE products.prod_id=tag_map.prod_id\
 	AND tag_map.tag_uid=? AND products.discontinued IS FALSE";
 
@@ -48,35 +49,35 @@ exports.getProductByTag = function(prodUid, callBack){
 			return;
 		}
 
-		console.log(result[0].image);
+		console.log(result);
 
-		fs.readFile(result[0].image, function(err, file){
-			var b64 = new Buffer(file).toString('base64');
-			result[0].prod_image = b64;
-			callBack(result);
+		convertToB64(result[0], function(result){
+			callBack([result]);
 		});
-
 	});
 }
 
 exports.getProductById = function(prodId, callBack){
 
-	var sql = "SELECT prod_id as id,\
+	var sql = "SELECT prod_id AS id,\
 					  prod_name AS name,\
 					  unit_price AS price,\
 					  prod_cat AS cat,\
 					  DATE(arr_date) AS arrival,\
-					  age_range AS age\
+					  age_range AS age,\
+					  prod_image AS image\
 					  FROM products WHERE prod_id=? AND discontinued IS FALSE";
 
 	dbConn.query(sql, [prodId], function(err, result){
-		if(err){
+		if(err || result.length == 0){
 			console.log(err);
 			return;
 		}
 
-		convertToB64(result, function(result){
-			callBack(result);
+		console.log(result);
+		//callBack(result);
+		convertToB64(result[0], function(result){
+			callBack([result]);
 		});
 	});
 }
@@ -172,5 +173,20 @@ exports.getFlags = function(custId, callBack){
 			return;
 		}
 		callBack(result);
+	});
+}
+
+exports.getProductImage = function(prodId, callBack){
+	var sql = "SELECT prod_image FROM products WHERE products.prod_id=?";
+
+	dbConn.query(sql, [prodId], function(err, result){
+		if(err || result.length === 0){
+			console.log(err);
+			return;
+		}
+
+		var fname = result[0].prod_image;
+		console.log(fname);
+		callBack(fname);
 	});
 }

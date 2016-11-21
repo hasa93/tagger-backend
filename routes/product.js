@@ -76,4 +76,11 @@ router.post('/get/flagged', function(req, res){
 	});
 });
 
+router.get('/get/image/:id', function(req, res){
+	var prodId = req.params.id;
+	productModel.getProductImage(prodId, function(image){
+		res.sendFile(image);
+	})
+});
+
 module.exports = router;
