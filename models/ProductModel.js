@@ -3,9 +3,13 @@ var dbConn = require('../sqlConn');
 var fs = require('fs');
 
 var convertToB64 = function(product, callBack){
+	product.image = __dirname + '/../' + product.image;
+
 	fs.readFile(product.image, function(err, file){
 		if(err){
 			console.log(err);
+			product.image = undefined;
+			callBack(product);
 			return;
 		}
 
@@ -61,6 +65,8 @@ exports.getProductByTag = function(prodUid, callBack){
 }
 
 exports.getProductById = function(prodId, callBack){
+	console.log("Get product by id");
+	console.log(__dirname);
 
 	var sql = "SELECT prod_id AS id,\
 					  prod_name AS name,\
@@ -73,7 +79,7 @@ exports.getProductById = function(prodId, callBack){
 					  FROM products WHERE prod_id=? AND discontinued IS FALSE";
 
 	dbConn.query(sql, [prodId], function(err, result){
-		if(err || result.length == 0){
+		if(err || result.length == 0 || result == null){
 			console.log(err);
 			return;
 		}
