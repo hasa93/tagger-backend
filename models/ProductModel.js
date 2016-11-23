@@ -22,8 +22,8 @@ exports.getProductList = function(callBack){
 					  products.age_range AS age,\
 					  DATE(products.arr_date) AS date,\
 					  products.prod_image AS image,\
-					  products.prod_desc AS desc\
-				FROM products WHERE discontinued IS FALSE";
+					  products.prod_desc AS descr\
+					  FROM products WHERE discontinued IS FALSE";
 
 	dbConn.query(sql, function(err, result){
 		if(err){
@@ -42,7 +42,7 @@ exports.getProductByTag = function(prodUid, callBack){
 					  DATE(products.arr_date) AS date,\
 					  products.prod_image AS image,\
 					  products.unit_price AS price,\
-					  products.prod_desc AS desc\
+					  products.prod_desc AS descr\
 	 FROM products, tag_map WHERE products.prod_id=tag_map.prod_id\
 	AND tag_map.tag_uid=? AND products.discontinued IS FALSE";
 
@@ -68,7 +68,8 @@ exports.getProductById = function(prodId, callBack){
 					  prod_cat AS cat,\
 					  DATE(arr_date) AS arrival,\
 					  age_range AS age,\
-					  prod_image AS image\
+					  prod_image AS image,\
+					  prod_desc AS descr\
 					  FROM products WHERE prod_id=? AND discontinued IS FALSE";
 
 	dbConn.query(sql, [prodId], function(err, result){
