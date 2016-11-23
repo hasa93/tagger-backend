@@ -2,6 +2,7 @@ var express = require('express');
 var productModel = require('../models/ProductModel');
 var router = express.Router();
 var authenticator = require('./authenticator');
+var uploader = require('../uploader');
 var fs = require('fs');
 
 router.get('/list', authenticator.authenticateStaff, function(req, res){
@@ -37,9 +38,33 @@ router.post('/delete/:id', authenticator.authenticateAdmin, function(req, res){
 });
 
 router.post('/insert', authenticator.authenticateAdmin, function(req, res){
-	var product = req.body;
-	productModel.insertProduct(product, function(result){
-		res.json(result);
+	console.log("Inserting product");
+
+	uploader(req, res, function(err){
+		console.log("Uploading image...");
+		console.log(req);
+
+		if(err){
+			console.log(err);
+			return;
+		}
+
+		var image = 'thumbs/default.png';
+
+
+		if(req.file !== undefined){
+			console.log("File exists...");
+			image = req.file.path;
+		}
+
+		var product = req.body;
+		product.image = image;
+
+		console.log(product);
+
+		productModel.insertProduct(product, function(result){
+			res.json(result);
+		});
 	});
 });
 

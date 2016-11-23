@@ -18,11 +18,13 @@ var appRouter = express.Router();
 
 appRouter.post('/upload', function(req, res){
     console.log("Called upload...");
+
     uploader(req, res, function(err){
       if(err){
         console.log(err);
         res.json({ status: "Upload Failed" });
       }
+      console.log(req);
       res.json({ status: "Starting File Upload..." });
     });
 });
@@ -37,8 +39,9 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(express.static(path.join(__dirname,'public')));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(function(req, res, next){
   res.header("Access-Control-Allow-Origin", "*");

@@ -21,6 +21,8 @@ exports.getProductList = function(callBack){
 					  products.prod_cat AS cat,\
 					  products.age_range AS age,\
 					  DATE(products.arr_date) AS date,\
+					  products.prod_image AS image,\
+					  products.prod_desc AS desc\
 				FROM products WHERE discontinued IS FALSE";
 
 	dbConn.query(sql, function(err, result){
@@ -39,7 +41,8 @@ exports.getProductByTag = function(prodUid, callBack){
 					  products.age_range AS age,\
 					  DATE(products.arr_date) AS date,\
 					  products.prod_image AS image,\
-					  products.unit_price AS price\
+					  products.unit_price AS price,\
+					  products.prod_desc AS desc\
 	 FROM products, tag_map WHERE products.prod_id=tag_map.prod_id\
 	AND tag_map.tag_uid=? AND products.discontinued IS FALSE";
 
@@ -75,7 +78,6 @@ exports.getProductById = function(prodId, callBack){
 		}
 
 		console.log(result);
-		//callBack(result);
 		convertToB64(result[0], function(result){
 			callBack([result]);
 		});
@@ -84,8 +86,10 @@ exports.getProductById = function(prodId, callBack){
 
 exports.getProductsByName = function(prodName, callBack){
 	var prodName = mysql.escape('%' + prodName + '%');
-	var sql = "SELECT prod_id as id, prod_name AS name, unit_price AS price, prod_cat AS cat, DATE(arr_date) AS arrival, age_range AS age FROM products WHERE prod_name LIKE" + prodName + " AND \
-	discontinued IS FALSE";
+	var sql = "SELECT prod_id as id, prod_name AS name, unit_price AS price, \
+				prod_cat AS cat, DATE(arr_date) AS arrival,\
+				age_range AS age FROM products WHERE prod_name LIKE" + prodName + " AND \
+				discontinued IS FALSE";
 
 	dbConn.query(sql, function(err, result){
 		if(err){
@@ -136,10 +140,15 @@ exports.deleteProduct = function(productId, callBack){
 }
 
 exports.insertProduct = function(product, callBack){
-	var sql = "INSERT INTO products (prod_name, unit_price, prod_cat, arr_date, age_range) VALUES\
-	(?, ?, ?, ?, ?)";
+	var productImage = JSON.parse(product.product);
+	productImage.image = product.image;
 
-	dbConn.query(sql, [product.name, product.price, product.category, product.arrival, product.age], function(err, result){
+	console.log(productImage);
+
+	var sql = "INSERT INTO products (prod_name, unit_price, prod_cat, arr_date, age_range, prod_image, prod_desc) VALUES\
+	(?, ?, ?, ?, ?, ?, ?)";
+
+	dbConn.query(sql, [productImage.name, productImage.price, productImage.category, productImage.arrival, productImage.age, productImage.image, productImage.desc], function(err, result){
 		if(err){
 			console.log(err);
 			return;
