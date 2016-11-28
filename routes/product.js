@@ -93,10 +93,14 @@ router.get('/new/arrivals/:count', function(req, res){
 	});
 });
 
-router.post('/get/flagged', function(req, res){
-	var custId = req.body.custId;
+router.get('/get/flagged/:id', function(req, res){
+	var custId = req.params.id;
 
-	productModel.getFlags(custId, function(result){
+	productModel.getFlaggedProducts(custId, function(result){
+		if(result == undefined){
+			res.json({ status: 'ERROR', msg: 'Product not found'});
+			return;
+		}
 		res.json(result);
 	});
 });

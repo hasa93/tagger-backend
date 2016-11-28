@@ -81,6 +81,7 @@ exports.getProductById = function(prodId, callBack){
 	dbConn.query(sql, [prodId], function(err, result){
 		if(err || result.length == 0 || result == null){
 			console.log(err);
+			callBack();
 			return;
 		}
 
@@ -180,18 +181,6 @@ exports.getMostRecentProducts = function(count, callBack){
 	});
 }
 
-exports.getFlags = function(custId, callBack){
-	var sql = "SELECT cust_id AS custId, prod_id AS prodId FROM flags WHERE cust_id=?";
-
-	dbConn.query(sql, [custId], function(err, result){
-		if(err){
-			console.log(err);
-			return;
-		}
-		callBack(result);
-	});
-}
-
 exports.getProductImage = function(prodId, callBack){
 	var sql = "SELECT prod_image FROM products WHERE products.prod_id=?";
 
@@ -204,5 +193,20 @@ exports.getProductImage = function(prodId, callBack){
 		var fname = result[0].prod_image;
 		console.log(fname);
 		callBack(fname);
+	});
+}
+
+exports.getFlaggedProducts = function(custId, callBack){
+	var sql = "SELECT * FROM flags WHERE cust_id=?";
+
+	dbConn.query(sql, [custId], function(err, result){
+		if(err || result.length === 0){
+			console.log(err);
+			return;
+		}
+
+		var prodId = result[0].prod_id;
+
+		exports.getProductById(prodId, callBack);
 	});
 }
