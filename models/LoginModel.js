@@ -12,6 +12,7 @@ exports.getStaffMember = function(user, callBack){
 
 	dbConn.query(loginQuery, [user.uname, user.passwd], function(err, result){
 		if(err){
+			console.log(err);
 			callBack({
 				status: "ERROR",
 				message: err
@@ -80,5 +81,32 @@ exports.getCustomer = function(user, callBack){
 			status: "ERROR",
 			message: "Invalid login"
 		});
+	});
+}
+
+exports.getUserMail = function(uname, type, callBack){
+	var userQuery = "";
+
+	if(type === 'cust'){
+		userQuery = "SELECT customer.cust_contact AS mail,\
+							customer.cust_id AS id FROM customer, logins WHERE logins.uname=?";
+	}
+	else if(type === 'staff'){
+		userQuery = "SELECT staff.staff_contact AS mail,\
+							staff.staff_id AS id FROM staff, logins WHERE logins.uname=?";
+	}
+	else{
+		callBack({ status: 'ERROR', msg: 'Invalid type' }, null);
+		return;
+	}
+
+	dbConn.query(userQuery, [uname], function(err, result){
+		if(err){
+			console.log(err);
+			callBack(err, null);
+			return;
+		}
+
+		callBack(null, result);
 	});
 }

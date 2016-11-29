@@ -70,4 +70,27 @@ router.post('/customer', function(req, res){
 		issueToken(profile, res);
 	});
 });
+
+router.get('/forgot/:type/:uname', function(req, res){
+	var type = req.params.type;
+	var uname = req.params.uname;
+
+	loginModel.getUserMail(uname, type, function(err, result){
+		if(err){
+			console.log(err);
+			res.json(err);
+			return;
+		}
+
+		var user = result[0];
+		console.log(user);
+
+		var token = jwt.sign({ data: user }, appSecret , {
+			issuer: 't35-api',
+			expiresIn:  '24h' });
+
+		console.log(token);
+		res.json(token);
+	})
+});
 module.exports = router;
