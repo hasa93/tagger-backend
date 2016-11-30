@@ -3,6 +3,7 @@ var jwt = require('jsonwebtoken');
 var crypto = require('crypto');
 var mailer = require('../mailer');
 
+
 var router = express.Router();
 
 var loginModel = require('../models/LoginModel');
@@ -98,23 +99,6 @@ router.get('/reset/:token', function(req, res){
 	var token = req.params.token;
 	var user = req.body;
 	res.render('reset');
-});
-
-router.post('/reset/:token', function(req, res){
-	console.log(req.body);
-	var user = {};
-	var token = req.params.token;
-
-	user.newpasswd = req.body.password;
-	user.confirmpasswd = req.body.confirm;
-
-	loginModel.resetPassword(user, token, function(result){
-		if(result.status === "ERROR"){
-			res.render('error', { message: result.msg });
-			return;
-		}
-		res.json("Password reset successful!");
-	});
 });
 
 module.exports = router;

@@ -165,6 +165,7 @@ exports.resetPassword = function(user, token, callBack){
 			})
 		});
 	});
+
 }
 
 exports.setToken = function(loginId, resetToken, callBack){
