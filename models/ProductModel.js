@@ -86,10 +86,7 @@ exports.getProductById = function(prodId, callBack){
 		}
 
 		console.log(result);
-
-		convertToB64(result[0], function(result){
-			callBack([result]);
-		});
+		callBack(result);
 	});
 }
 

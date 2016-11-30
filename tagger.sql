@@ -157,12 +157,14 @@ CREATE TABLE `logins` (
   `passwd` varchar(40) DEFAULT NULL,
   `staff_id` int(11) DEFAULT NULL,
   `cust_id` int(11) DEFAULT NULL,
+  `reset_token` varchar(255) DEFAULT NULL,
+  `token_expiry` varchar(13) DEFAULT NULL,
   PRIMARY KEY (`login_id`),
   KEY `fk_StaffLogin` (`staff_id`),
   KEY `fk_CustLogin` (`cust_id`),
   CONSTRAINT `fk_CustLogin` FOREIGN KEY (`cust_id`) REFERENCES `customer` (`cust_id`) ON DELETE CASCADE,
   CONSTRAINT `fk_StaffLogin` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -171,7 +173,7 @@ CREATE TABLE `logins` (
 
 LOCK TABLES `logins` WRITE;
 /*!40000 ALTER TABLE `logins` DISABLE KEYS */;
-INSERT INTO `logins` VALUES (1,'codon@baby','7402411f9090581314be0304d5d1b9d95d6f4079',2,NULL),(3,'hagen@baby','4d5bb2d32024e62584022f82eb016d5f4634880b',NULL,1),(4,'jhl@baby','6794d21b82ccbc26c3c80f0d4976a76ab0446ad7',4,NULL),(5,'kowalski@baby','f56f228a1bfbb14683b61a1e3b42f3eaa3c58d81',6,NULL),(6,'harlem@baby','a9b9f1fd61015b368e60e370d4a45629dc6c0b40',7,NULL),(7,'master@baby','4f26aeafdb2367620a393c973eddbe8f8b846ebd',NULL,NULL),(8,'enid@baby','a17b0df349245a2d8516dce05de86d7c7889cb2c',9,NULL),(9,'john@baby','e851ceec80c23cc168884d85b1f9b0251c07ad76',10,NULL),(20,'sam@baby','2c5dc58f48bd132b1eb3d309997965aadd606580',21,NULL),(21,'madura@baby','01f178b93aa694902c50dd682943f02a92483376',22,NULL),(22,'thushara@baby','a76ea889caa25201955ae27d15e7f5fe4c5aaf0a',23,NULL),(23,'don@baby','96d029b9830b7f04b48672c932276350598b3753',24,NULL),(24,'vin@baby','88eaa48ac5692719ed8b6b0e1056340912bf9798',25,NULL),(25,'sam@baby','2c5dc58f48bd132b1eb3d309997965aadd606580',26,NULL),(26,'ernest@baby','79f960352f93b150d47d0cbc488df95fc8285a4e',27,NULL),(27,'elijah@baby','8319978631a625bea6969b9e8e38be1c5268ab6a',28,NULL),(28,'amy@baby','060a7fa5bf698adf8c980eac539218ce7cdec9df',29,NULL),(29,'psn@baby','ea120f797e17e81c3b695b1b5a221da8bbcf2ae4',30,NULL),(30,'fred@baby','36bec0cca92affa5aff75428269869949b75256c',31,NULL),(32,'meamy','4c43663c4f6bea779af3d2a94d21afb7ec7f61ac',NULL,5);
+INSERT INTO `logins` VALUES (1,'codon@baby','7402411f9090581314be0304d5d1b9d95d6f4079',2,NULL,NULL,NULL),(3,'hagen@baby','403926033d001b5279df37cbbe5287b7c7c267fa',NULL,1,'375996df1c20bb05be5216fb79979e09ee86eb9d9c06106bda','1480578643385'),(4,'jhl@baby','6794d21b82ccbc26c3c80f0d4976a76ab0446ad7',4,NULL,NULL,NULL),(5,'kowalski@baby','403926033d001b5279df37cbbe5287b7c7c267fa',6,NULL,NULL,NULL),(6,'harlem@baby','a9b9f1fd61015b368e60e370d4a45629dc6c0b40',7,NULL,NULL,NULL),(7,'master@baby','4f26aeafdb2367620a393c973eddbe8f8b846ebd',NULL,NULL,NULL,NULL),(8,'enid@baby','a17b0df349245a2d8516dce05de86d7c7889cb2c',9,NULL,NULL,NULL),(9,'john@baby','e851ceec80c23cc168884d85b1f9b0251c07ad76',10,NULL,'97ae6d0a2a9094f4f7e4107172ba3144664e8d606822e93f7b','2147483647'),(20,'sam@baby','2c5dc58f48bd132b1eb3d309997965aadd606580',21,NULL,NULL,NULL),(21,'madura@baby','01f178b93aa694902c50dd682943f02a92483376',22,NULL,NULL,NULL),(22,'thushara@baby','a76ea889caa25201955ae27d15e7f5fe4c5aaf0a',23,NULL,NULL,NULL),(23,'don@baby','96d029b9830b7f04b48672c932276350598b3753',24,NULL,NULL,NULL),(24,'vin@baby','88eaa48ac5692719ed8b6b0e1056340912bf9798',25,NULL,NULL,NULL),(25,'sam@baby','2c5dc58f48bd132b1eb3d309997965aadd606580',26,NULL,NULL,NULL),(26,'ernest@baby','79f960352f93b150d47d0cbc488df95fc8285a4e',27,NULL,NULL,NULL),(27,'elijah@baby','8319978631a625bea6969b9e8e38be1c5268ab6a',28,NULL,NULL,NULL),(28,'amy@baby','060a7fa5bf698adf8c980eac539218ce7cdec9df',29,NULL,NULL,NULL),(29,'psn@baby','ea120f797e17e81c3b695b1b5a221da8bbcf2ae4',30,NULL,NULL,NULL),(30,'fred@baby','36bec0cca92affa5aff75428269869949b75256c',31,NULL,NULL,NULL),(32,'meamy','4c43663c4f6bea779af3d2a94d21afb7ec7f61ac',NULL,5,NULL,NULL),(33,'TikiriMuney','f7c3bc1d808e04732adf679965ccc34ca7ae3441',32,NULL,NULL,NULL),(34,'arojas','f4ddc0a77ecb5492773c081633aace30d1e677ee',33,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `logins` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -192,8 +194,9 @@ CREATE TABLE `products` (
   `discontinued` tinyint(1) DEFAULT '0',
   `returnable` tinyint(1) DEFAULT '0',
   `prod_image` varchar(100) DEFAULT NULL,
+  `prod_desc` mediumtext,
   PRIMARY KEY (`prod_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -202,7 +205,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (1,'Gk Pacifier',120,'SNTR','2016-09-04','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-three.jpg'),(2,'Navy Blue Top',4300,'CLTH','2016-09-04','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg'),(3,'RC Drone 4Q',12500,'TOYS','2016-09-04','ANY',1,1,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-two.jpg'),(4,'Boys bright tshirts',1300,'CLOT','2016-09-01','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg'),(5,'Boys jersy pull on shorts',1200,'CLOT','2016-09-04','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-two.jpg'),(6,'Boys heritage jersy',1300,'CLOT','2016-09-04','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg'),(7,'Camero baby logo crew suit',2200,'CLOT','2016-09-03','1Y-5Y',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg'),(8,'Adidas original baby boy t-shirt',5400,'CLOT','2016-08-19','6M-1Y',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg'),(9,'Boys denim shorts',1300,'CLOT','2016-09-04','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg'),(10,'Boys tops',1100,'CLOT','2016-09-04','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg'),(11,'Graco Baby Breeze Stroller',42,'OTHE','2016-09-01','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg'),(12,'Varsity Puffer',2471.96,'CLOT','2016-09-01','5Y-9Y',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg'),(17,'Auburn teen shirts - long sleeves',2342.89,'CLOT','2016-10-30','9Y-12',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg');
+INSERT INTO `products` VALUES (1,'Gk Pacifier',120,'SNTR','2016-09-04','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-three.jpg',NULL),(2,'Navy Blue Top',4300,'CLTH','2016-09-04','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg',NULL),(3,'RC Drone 4Q',12500,'TOYS','2016-09-04','ANY',1,1,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-two.jpg',NULL),(4,'Boys bright tshirts',1300,'CLOT','2016-09-01','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg',NULL),(5,'Boys jersy pull on shorts',1200,'CLOT','2016-09-04','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-two.jpg',NULL),(6,'Boys heritage jersy',1300,'CLOT','2016-09-04','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg',NULL),(7,'Camero baby logo crew suit',2200,'CLOT','2016-09-03','1Y-5Y',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg',NULL),(8,'Adidas original baby boy t-shirt',5400,'CLOT','2016-08-19','6M-1Y',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg',NULL),(9,'Boys denim shorts',1300,'CLOT','2016-09-04','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg',NULL),(10,'Boys tops',1100,'CLOT','2016-09-04','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg',NULL),(11,'Graco Baby Breeze Stroller',42,'OTHE','2016-09-01','ANY',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg',NULL),(12,'Varsity Puffer',2471.96,'CLOT','2016-09-01','5Y-9Y',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg',NULL),(17,'Auburn teen shirts - long sleeves',2342.89,'CLOT','2016-10-30','9Y-12',0,0,'/home/hasa93/Projects/Tagger/tagger-backend/thumbs/dress-one.jpg',NULL);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -251,7 +254,7 @@ CREATE TABLE `staff` (
   PRIMARY KEY (`staff_id`),
   KEY `fk_BranchKey` (`branch_id`),
   CONSTRAINT `fk_BranchKey` FOREIGN KEY (`branch_id`) REFERENCES `branch` (`branch_id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -260,7 +263,7 @@ CREATE TABLE `staff` (
 
 LOCK TABLES `staff` WRITE;
 /*!40000 ALTER TABLE `staff` DISABLE KEYS */;
-INSERT INTO `staff` VALUES (2,'mgr','Michael','Coroleone','0115559031',NULL),(4,'csh','John','Langdon','N/A',NULL),(6,'csh','Nathan','Kowalski','0115559031',NULL),(7,'csh','Harlem','Channing','0115559031',NULL),(8,'mst','MASTER',NULL,'N/A',NULL),(9,'csh','Enid','Litsnikov','0112500988',NULL),(10,'csh','John','Spitzer','N/A',NULL),(21,'csh','Sam','Hawkings','0725893836',NULL),(22,'csh','Madura','Herath','0765432187',NULL),(23,'csh','Thushara','Sandekalum',NULL,NULL),(24,'mgr','Vito','Coroleone','0115559031',NULL),(25,'csh','Vin','Petrol',NULL,NULL),(26,'csh','Sam','Norton',NULL,NULL),(27,'csh','Ernest','Hemingway',NULL,NULL),(28,'csh','Elijah','Wood',NULL,NULL),(29,'csh','Amy','Collingridge',NULL,NULL),(30,'csh','Pasan','Missaka',NULL,NULL),(31,'csh','Fred','Jenkins',NULL,NULL);
+INSERT INTO `staff` VALUES (2,'mgr','Michael','Coroleone','0115559031',1),(4,'csh','John','Langdon','N/A',1),(6,'csh','Nathan','Kowalski','0115559031',1),(7,'csh','Harlem','Channing','0115559031',1),(8,'mst','MASTER',NULL,'N/A',1),(9,'csh','Enid','Litsnikov','0112500988',1),(10,'csh','John','Spitzer','N/A',1),(21,'csh','Sam','Hawkings','0725893836',1),(22,'csh','Madura','Herath','0765432187',1),(23,'csh','Thushara','Sandekalum',NULL,1),(24,'mgr','Vito','Coroleone','0115559031',1),(25,'csh','Vin','Petrol',NULL,1),(26,'csh','Sam','Norton',NULL,1),(27,'csh','Ernest','Hemingway',NULL,1),(28,'csh','Elijah','Wood',NULL,1),(29,'csh','Amy','Collingridge',NULL,1),(30,'csh','Pasan','Missaka',NULL,1),(31,'csh','Fred','Jenkins',NULL,1),(32,'csh','Tikiri','Muney','0779938401',NULL),(33,'csh','Alejandro','Rojas','0123456780',NULL);
 /*!40000 ALTER TABLE `staff` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -302,7 +305,7 @@ CREATE TABLE `voucher` (
   `issue_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `exp_date` date DEFAULT NULL,
   PRIMARY KEY (`vouch_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -311,7 +314,7 @@ CREATE TABLE `voucher` (
 
 LOCK TABLES `voucher` WRITE;
 /*!40000 ALTER TABLE `voucher` DISABLE KEYS */;
-INSERT INTO `voucher` VALUES (7,1,5000.00,'2016-09-13 17:41:35','2016-09-20'),(9,1,2500.00,'2016-09-13 17:48:07','2016-09-20'),(11,NULL,3500.00,'2016-09-13 18:03:03','2016-09-20');
+INSERT INTO `voucher` VALUES (7,1,5000.00,'2016-09-13 17:41:35','2016-09-20'),(9,1,2500.00,'2016-09-13 17:48:07','2016-09-20'),(11,NULL,3500.00,'2016-09-13 18:03:03','2016-09-20'),(12,2,5200.00,'2016-11-20 05:00:26','2017-01-05'),(15,1,2500.00,'2016-11-20 05:27:25','2016-11-27'),(16,1,5400.00,'2016-11-20 05:35:28','2016-11-27'),(17,1,5000.00,'2016-11-20 05:38:34','2016-11-27'),(18,1,5000.00,'2016-11-20 05:39:48','2016-11-27'),(19,1,5400.00,'2016-11-20 05:41:17','2016-11-27'),(21,1,5500.00,'2016-11-20 05:42:08','2016-11-27'),(22,1,5400.00,'2016-11-20 05:42:51','2016-11-27'),(23,1,2300.00,'2016-11-20 05:44:02','2016-11-27'),(24,1,5400.00,'2016-11-20 05:44:43','2016-11-27'),(25,1,5600.00,'2016-11-20 05:47:07','2016-11-27'),(27,1,2300.00,'2016-11-20 05:56:32','2016-11-27'),(28,1,4500.00,'2016-11-20 06:03:21','2016-11-27'),(29,1,3500.00,'2016-11-20 06:04:31','2016-11-27'),(30,1,3400.00,'2016-11-20 06:15:54','2016-11-27');
 /*!40000 ALTER TABLE `voucher` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -324,4 +327,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-11-10  7:33:25
+-- Dump completed on 2016-11-30 17:13:59

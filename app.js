@@ -16,19 +16,6 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var appRouter = express.Router();
 
-appRouter.post('/upload', function(req, res){
-    console.log("Called upload...");
-
-    uploader(req, res, function(err){
-      if(err){
-        console.log(err);
-        res.json({ status: "Upload Failed" });
-      }
-      console.log(req);
-      res.json({ status: "Starting File Upload..." });
-    });
-});
-
 io.on('connection', function(socket){
   console.log("User connected...");
   socket.emit("hello", { text: "yo dude!"});
@@ -42,6 +29,7 @@ app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname,'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('thumbs'));
 
 app.use(function(req, res, next){
   res.header("Access-Control-Allow-Origin", "*");

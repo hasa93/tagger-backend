@@ -19,8 +19,8 @@ router.get('/find/name/:name', authenticator.authenticateStaff, function(req, re
 
 router.get('/find/id/:prodId', authenticator.authenticateStaff, function(req, res){
 	var prodId = req.params.prodId;
-	productModel.getProductById(prodId, function(rows){
-		res.json(rows);
+	productModel.getProductById(prodId, function(result){
+		res.json(result);
 	});
 });
 
@@ -54,7 +54,7 @@ router.post('/insert', authenticator.authenticateAdmin, function(req, res){
 
 		if(req.file !== undefined){
 			console.log("File exists...");
-			image = req.file.path;
+			image = req.file.filename;
 		}
 
 		var product = req.body;
@@ -107,9 +107,7 @@ router.get('/get/flagged/:id', function(req, res){
 
 router.get('/get/image/:id', function(req, res){
 	var prodId = req.params.id;
-	productModel.getProductImage(prodId, function(image){
-		res.sendFile(image);
-	})
+	res.sendFile('public/dress-one.jpg');
 });
 
 module.exports = router;
