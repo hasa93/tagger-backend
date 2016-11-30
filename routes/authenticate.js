@@ -1,5 +1,6 @@
 var express = require('express');
 var jwt = require('jsonwebtoken');
+var crypto = require('crypto');
 
 var router = express.Router();
 
@@ -72,25 +73,30 @@ router.post('/customer', function(req, res){
 });
 
 router.get('/forgot/:type/:uname', function(req, res){
-	var type = req.params.type;
 	var uname = req.params.uname;
+	var type = req.params.type;
 
-	loginModel.getUserMail(uname, type, function(err, result){
+	var resetToken = crypto.randomBytes(25).toString('hex');
+
+	loginModel.getLoginInfo(uname, type, function(err, result){
 		if(err){
 			console.log(err);
 			res.json(err);
 			return;
 		}
+		console.log(result);
+		loginModel.setToken(result[0].loginId, resetToken, function(result){
+			res.json({ resetToken: resetToken });
+		});
+	});
+});
 
-		var user = result[0];
-		console.log(user);
+router.post('/reset/:token', function(req, res){
+	var token = req.params.token;
+	var user = req.body;
 
-		var token = jwt.sign({ data: user }, appSecret , {
-			issuer: 't35-api',
-			expiresIn:  '24h' });
-
-		console.log(token);
-		res.json(token);
-	})
+	loginModel.resetPassword(user, token, function(result){
+		res.json(result);
+	});
 });
 module.exports = router;
