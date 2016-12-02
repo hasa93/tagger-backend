@@ -24,7 +24,7 @@ router.get('/find/id/:prodId', authenticator.authenticateStaff, function(req, re
 	});
 });
 
-router.get('/find/uid/:prodUid', authenticator.authenticateStaff, function(req, res){
+router.get('/find/uid/:prodUid', authenticator.authenticateToken, function(req, res){
 	var prodUid = req.params.prodUid;
 	productModel.getProductByTag(prodUid, function(result){
 		res.json(result);

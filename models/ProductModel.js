@@ -46,7 +46,7 @@ exports.getProductByTag = function(prodUid, callBack){
 					  DATE(products.arr_date) AS date,\
 					  products.prod_image AS image,\
 					  products.unit_price AS price,\
-					  products.prod_desc AS descr,\
+					  products.prod_desc AS descr\
 	 FROM products, tag_map WHERE products.prod_id=tag_map.prod_id\
 	AND tag_map.tag_uid=? AND products.discontinued IS FALSE";
 
@@ -56,11 +56,7 @@ exports.getProductByTag = function(prodUid, callBack){
 			return;
 		}
 
-		console.log(result);
-
-		convertToB64(result[0], function(result){
-			callBack([result]);
-		});
+		callBack(result);
 	});
 }
 
