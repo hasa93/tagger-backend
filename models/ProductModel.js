@@ -165,8 +165,12 @@ exports.insertProduct = function(product, callBack){
 
 exports.getMostRecentProducts = function(count, callBack){
 	console.log(parseInt(count));
-	var sql = "SELECT prod_id AS prodId, prod_name AS prodName, unit_price AS price, arr_date AS date,\
-					  age_range AS ageRange, prod_image AS prodImage FROM products ORDER BY(arr_date) DESC LIMIT " + parseInt(count);
+	var sql = "SELECT prod_id AS id,\
+					  prod_name AS name,\
+					  unit_price AS price,\
+					  arr_date AS date,\
+					  age_range AS ageRange,\
+					  prod_image AS image FROM products ORDER BY(arr_date) DESC LIMIT " + parseInt(count);
 
 	console.log(sql);
 
