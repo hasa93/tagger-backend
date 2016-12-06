@@ -21,6 +21,14 @@ router.get('/find/voucher/:id', authenticator.authenticateStaff, function(req, r
 	});
 });
 
+router.get('/find/voucher/cust/:contact', authenticator.authenticateToken, function(req, res){
+	var contact = req.params.contact;
+
+	retailModel.getVoucherByCustomer(contact, function(result){
+		res.json(result);
+	});
+});
+
 router.post('/claim/voucher/:id', authenticator.authenticateStaff, function(req, res){
 	retailModel.claimVoucher(req.params.id, function(result){
 		res.json(result);

@@ -20,18 +20,36 @@ exports.insertPurchaseRec = function(receipt){
 exports.createVoucher = function(voucher, callBack){
 	console.log(voucher);
 
-	var sql = "INSERT INTO voucher (issued_branch, vouch_amount, exp_date)\
-	VALUES (?, ?, ?)";
+	var createVoucher = function(callBack){
+		var voucherQuery = "INSERT INTO voucher (issued_branch, vouch_amount, exp_date, cust_contact)\
+		VALUES (?, ?, ?, ?)";
 
-	dbConn.query(sql, [voucher.branchId, voucher.amount, voucher.expiry], function(err, result){
-		if(err){
-			console.log(err);
-			return;
-		}
+		dbConn.query(voucherQuery, [voucher.branchId, voucher.amount, voucher.expiry, voucher.contact], function(err, result){
+			if(err){
+				console.log(err);
+				return;
+			}
 
-		voucher.voucherId = result.insertId;
-		callBack(voucher);
-	});
+			voucher.voucherId = result.insertId;
+			callBack(voucher);
+		});
+	}
+
+	if(voucher.contact == undefined){
+		createVoucher(callBack);
+	}
+	else{
+		var contactQuery = "SELECT * FROM customer WHERE cust_contact=?";
+		dbConn.query(contactQuery, [voucher.contact], function(err, result){
+			if(err || result.length == 0){
+				console.log(err);
+				callBack({ status: "ERROR", msg: err });
+				return;
+			}
+
+			createVoucher(callBack);
+		});
+	}
 }
 
 exports.findVoucher = function(voucher_id, callBack){
@@ -189,6 +207,19 @@ exports.getFlags = function(custId, callBack){
 	dbConn.query(sql, [custId], function(err, result){
 		if(err){
 			console.log(err);
+			return;
+		}
+		callBack(result);
+	});
+}
+
+exports.getVoucherByCustomer = function(custContact, callBack){
+	var voucherQuery = "SELECT * FROM voucher WHERE cust_contact=?";
+
+	dbConn.query(voucherQuery, [custContact], function(err, result){
+		if(err || result.length == 0){
+			console.log(err);
+			callBack({ status:'ERROR', msg: err });
 			return;
 		}
 		callBack(result);
