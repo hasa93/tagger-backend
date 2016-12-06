@@ -214,7 +214,8 @@ exports.getFlags = function(custId, callBack){
 }
 
 exports.getVoucherByCustomer = function(custContact, callBack){
-	var voucherQuery = "SELECT * FROM voucher WHERE cust_contact=?";
+	var voucherQuery = "SELECT voucher.*, branch.branch_name FROM voucher, branch WHERE cust_contact=? AND\
+	branch.branch_id=voucher.issued_branch";
 
 	dbConn.query(voucherQuery, [custContact], function(err, result){
 		if(err || result.length == 0){
