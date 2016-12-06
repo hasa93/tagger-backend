@@ -76,11 +76,30 @@ router.post('/insert/tag', authenticator.authenticateAdmin, function(req, res){
 });
 
 router.post('/update/:id', authenticator.authenticateAdmin, function(req, res){
-	var updateData = req.body;
 	var prodId = req.params.id;
 
-	productModel.updateProduct(prodId, updateData, function(result){
-		res.json(result);
+	uploader(req, res, function(err){
+		console.log("Uploading image...");
+		console.log(req);
+
+		if(err){
+			console.log(err);
+			return;
+		}
+
+		var product = JSON.parse(req.body.product);
+
+		if(req.file !== undefined){
+			console.log("File exists...");
+			product.image = req.file.filename;
+		}
+
+
+		console.log(product);
+
+		productModel.updateProduct(prodId, product, function(result){
+			res.json(result);
+		});
 	});
 });
 

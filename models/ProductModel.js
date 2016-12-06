@@ -3,7 +3,7 @@ var dbConn = require('../sqlConn');
 var fs = require('fs');
 
 var convertToB64 = function(product, callBack){
-	product.image = __dirname + '/../' + product.image;
+	product.image = __dirname + '/../thumbs' + product.image;
 
 	fs.readFile(product.image, function(err, file){
 		if(err){
@@ -88,9 +88,15 @@ exports.getProductById = function(prodId, callBack){
 
 exports.getProductsByName = function(prodName, callBack){
 	var prodName = mysql.escape('%' + prodName + '%');
-	var sql = "SELECT prod_id as id, prod_name AS name, unit_price AS price, \
-				prod_cat AS cat, DATE(arr_date) AS arrival,\
-				age_range AS age FROM products WHERE prod_name LIKE" + prodName + " AND \
+	var sql = "SELECT prod_id as id,\
+					  prod_name AS name,\
+					  unit_price AS price,\
+					  prod_cat AS cat,\
+					  DATE(arr_date) AS arrival,\
+					  age_range AS age,\
+					  prod_image AS image,\
+					  prod_desc AS descr\
+					  FROM products WHERE prod_name LIKE" + prodName + " AND \
 				discontinued IS FALSE";
 
 	dbConn.query(sql, function(err, result){
@@ -118,9 +124,9 @@ exports.updateProduct = function(prodId, delta, callBack){
 	console.log(delta);
 
 	var sql = "UPDATE products SET prod_name=?, unit_price=?, age_range=?,\
-	prod_cat=?, arr_date=? WHERE prod_id=?";
+	prod_cat=?, arr_date=?, prod_image=?, prod_desc=? WHERE prod_id=?";
 
-	dbConn.query(sql, [delta.name, delta.price, delta.age, delta.cat, delta.arrival, prodId], function(err, result){
+	dbConn.query(sql, [delta.name, delta.price, delta.age, delta.cat, delta.arrival, delta.image, delta.descr, prodId], function(err, result){
 		if(err){
 			console.log(err);
 			return;
