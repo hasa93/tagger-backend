@@ -171,8 +171,10 @@ exports.getMostRecentProducts = function(count, callBack){
 					  prod_name AS name,\
 					  unit_price AS price,\
 					  arr_date AS date,\
-					  age_range AS ageRange,\
-					  prod_image AS image FROM products ORDER BY(arr_date) DESC LIMIT " + parseInt(count);
+					  age_range AS age,\
+					  prod_image AS image,\
+					  prod_desc AS descr\
+					  FROM products ORDER BY(arr_date) DESC LIMIT " + parseInt(count);
 
 	console.log(sql);
 
