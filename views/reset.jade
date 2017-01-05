@@ -1,0 +1,18 @@
+doctype html
+html(lang='en')
+  head
+    title  Reset Request
+  body
+    center
+      h1  WE GOT THIS!
+    #container.col
+      form(name='reset', method='post')
+        label(for='password')
+          | New password
+          input(type='password', name='password')
+          br
+        label(for='confirm')
+          | Re-type new password
+          input(type='password', name='confirm')
+          br
+        input(type="submit", name="reset", value="Reset")
