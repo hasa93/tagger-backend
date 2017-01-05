@@ -73,7 +73,7 @@ router.post('/customer', function(req, res){
 	});
 });
 
-router.get('/forgot/:type/:uname', function(req, res){
+router.post('/forgot/:type/:uname', function(req, res){
 	var uname = req.params.uname;
 	var type = req.params.type;
 
@@ -86,18 +86,35 @@ router.get('/forgot/:type/:uname', function(req, res){
 			return;
 		}
 		console.log(result);
+
 		loginModel.setToken(result[0].loginId, resetToken, function(result){
 			res.json({ resetToken: resetToken });
+			mailer.sendResetToken('jogeggbert@gmail.com', resetToken);
 		});
 	});
 });
 
-router.post('/reset/:token', function(req, res){
+router.get('/reset/:token', function(req, res){
 	var token = req.params.token;
 	var user = req.body;
+	res.render('reset');
+});
+
+router.post('/reset/:token', function(req, res){
+	console.log(req.body);
+	var user = {};
+	var token = req.params.token;
+
+	user.newpasswd = req.body.password;
+	user.confirmpasswd = req.body.confirm;
 
 	loginModel.resetPassword(user, token, function(result){
-		res.json(result);
+		if(result.status === "ERROR"){
+			res.render('error', { message: result.msg });
+			return;
+		}
+		res.json("Password reset successful!");
 	});
 });
+
 module.exports = router;
