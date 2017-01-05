@@ -1,6 +1,7 @@
 var express = require('express');
 var jwt = require('jsonwebtoken');
 var crypto = require('crypto');
+var mailer = require('../mailer');
 
 var router = express.Router();
 
