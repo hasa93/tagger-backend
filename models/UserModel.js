@@ -5,9 +5,9 @@ var dbConn = require('../sqlConn');
 exports.createLogin = function(user, callBack){
 	console.log(user);
 
-	var createQuery = "INSERT INTO logins (uname, passwd, staff_id, cust_id) VALUES (?, ?, ?, ?)";
+	var createQuery = "INSERT INTO logins (uname, passwd, email, staff_id, cust_id) VALUES (?, ?, ?, ?, ?)";
 
-	dbConn.query(createQuery, [user.uname, user.passwd, user.staff_id, user.cust_id],
+	dbConn.query(createQuery, [user.uname, user.passwd, user.email, user.staff_id, user.cust_id],
 		function(err, result){
 			if(err) console.log(err);
 			result.user = user;

@@ -82,33 +82,12 @@ exports.getCustomer = function(user, callBack){
 	});
 }
 
-exports.getLoginInfo = function(uname, type, callBack){
-	var userQuery = "";
+exports.getLoginInfo = function(email, callBack){
 
-	if(type === 'cust'){
-		userQuery = "SELECT customer.cust_contact AS mail,\
-							customer.cust_id AS id,\
-							logins.login_id AS loginId\
-							FROM customer INNER JOIN logins \
-							ON customer.cust_id = logins.cust_id \
-							WHERE logins.uname=?";
-	}
-	else if(type === 'staff'){
-		userQuery = "SELECT staff.staff_contact AS mail,\
-							staff.staff_id AS id,\
-							logins.login_id AS loginId\
-							FROM staff INNER JOIN logins\
-							ON staff.staff_id = logins.staff_id\
-							WHERE logins.uname=?";
-	}
-	else{
-		callBack({ status: 'ERROR', msg: 'Invalid type' }, null);
-		return;
-	}
+	var userQuery = "SELECT login_id AS loginId FROM logins where email=?";
 
-	dbConn.query(userQuery, [uname], function(err, result){
+	dbConn.query(userQuery, [email], function(err, result){
 		if(err || result.length == 0){
-			console.log(err);
 			callBack(err, null);
 			return;
 		}
@@ -120,6 +99,7 @@ exports.getLoginInfo = function(uname, type, callBack){
 exports.resetPassword = function(user, token, callBack){
 
 	var tokenQuery = "SELECT login_id, token_expiry FROM logins WHERE reset_token=?";
+	console.log(user);
 
 	dbConn.query(tokenQuery, [token], function(err, result){
 		if(err || result.length == 0){
@@ -139,7 +119,7 @@ exports.resetPassword = function(user, token, callBack){
 			return;
 		}
 
-		if(user.newpasswd != user.confirmpasswd){
+		if(user.password != user.confirm){
 			callBack({ status: 'ERROR', msg: 'Password mismatch'});
 			return;
 		}
@@ -153,7 +133,7 @@ exports.resetPassword = function(user, token, callBack){
 			dbConn.query(deleteTokenQuery, [token], callBack);
 		}
 
-		dbConn.query(resetQuery, [sha1(user.newpasswd), loginId], function(err, result){
+		dbConn.query(resetQuery, [sha1(user.confirm), loginId], function(err, result){
 			if(err){
 				console.log(err);
 				callBack({ status: 'ERROR', msg: err });
@@ -162,21 +142,20 @@ exports.resetPassword = function(user, token, callBack){
 
 			deleteToken(token, function(){
 				callBack({ status: "SUCCESS" });
-			})
+			});
 		});
 	});
 
 }
 
-exports.setToken = function(loginId, resetToken, callBack){
-	var tokenQuery = "";
+exports.setToken = function(userId, resetToken, callBack){
 	var date = new Date();
 	date.setDate(date.getDate() + 1);
 	console.log(date.getTime());
 
 	var tokenQuery = "UPDATE logins SET token_expiry=?, reset_token=? WHERE login_id=?";
 
-	dbConn.query(tokenQuery, [date.getTime().toString(), resetToken, loginId], function(err, result){
+	dbConn.query(tokenQuery, [date.getTime().toString(), resetToken, userId], function(err, result){
 		if(err){
 			console.log(err);
 			callBack(err);

@@ -74,23 +74,21 @@ router.post('/customer', function(req, res){
 	});
 });
 
-router.post('/forgot/:type/:uname', function(req, res){
-	var uname = req.params.uname;
-	var type = req.params.type;
+router.post('/forgot', function(req, res){
+	var email = req.body.email;
 
 	var resetToken = crypto.randomBytes(25).toString('hex');
 
-	loginModel.getLoginInfo(uname, type, function(err, result){
-		if(err){
+	loginModel.getLoginInfo(email, function(err, result){
+		if(err || result == null){
 			console.log(err);
-			res.json(err);
+			res.json({ status: "ERROR"});
 			return;
 		}
-		console.log(result);
 
 		loginModel.setToken(result[0].loginId, resetToken, function(result){
-			res.json({ resetToken: resetToken });
-			mailer.sendResetToken('jogeggbert@gmail.com', resetToken);
+			res.json({ status: "SUCCESS" });
+			mailer.sendResetToken(email, resetToken);
 		});
 	});
 });
@@ -99,6 +97,21 @@ router.get('/reset/:token', function(req, res){
 	var token = req.params.token;
 	var user = req.body;
 	res.render('reset');
+});
+
+router.post('/reset/:token', function(req, res){
+	var token = req.params.token;
+	var user = req.body;
+
+	// console.log(user);
+
+	loginModel.resetPassword(user, token, function(result){
+		if(result.status === "ERROR"){
+			res.render('error', result.msg);
+			return;
+		}
+		res.render('error', { message : 'success' });
+	});
 });
 
 module.exports = router;
