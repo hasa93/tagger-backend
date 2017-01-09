@@ -19,7 +19,7 @@ var convertToB64 = function(product, callBack){
 	});
 }
 
-var getCustomerPreferences = function(product, custId, callBack){
+exports.getCustomerPreferences = function(product, custId, callBack){
 	var customerQuery = "SELECT IFNULL((SELECT cust_id FROM flags WHERE cust_id = ? AND prod_id = ?), null) AS flag,\
 			 IFNULL((SELECT prod_rating FROM ratings WHERE cust_id = ? AND prod_id=?), null) AS ratings";
 
@@ -79,7 +79,7 @@ exports.getProductByTag = function(prodUid, custId, callBack){
 			callBack(result);
 		}
 		else{
-			getCustomerPreferences(result[0], custId, callBack);
+			exports.getCustomerPreferences(result[0], custId, callBack);
 		}
 
 	});
@@ -132,7 +132,7 @@ exports.getProductsByName = function(prodName, custId, callBack){
 			callBack(result);
 		}
 		else{
-			getCustomerPreferences(result[0], custId, callBack);
+			exports.getCustomerPreferences(result[0], custId, callBack);
 		}
 	});
 }
@@ -194,7 +194,7 @@ exports.insertProduct = function(product, callBack){
 	});
 }
 
-exports.getMostRecentProducts = function(count, custId, category, callBack){
+exports.getMostRecentProducts = function(count, category, callBack){
 	console.log(parseInt(count));
 	var sql = "SELECT prod_id AS id,\
 					  prod_name AS name,\
@@ -212,7 +212,8 @@ exports.getMostRecentProducts = function(count, custId, category, callBack){
 			callBack({ status: "ERROR", msg: err });
 			return;
 		}
-		getCustomerPreferences(result[0], custId, callBack);
+
+		callBack(result);
 	});
 }
 

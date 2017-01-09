@@ -119,12 +119,12 @@ router.post('/update/:id', authenticator.authenticateAdmin, function(req, res){
 });
 
 //Protect these routes before deployment
-router.get('/recent/:custId/:category/:count', function(req, res){
+router.get('/recent/:category/:count', function(req, res){
 	var counts = req.params.count;
 	var category = req.params.category;
 	var custId = req.params.custId;
 
-	productModel.getMostRecentProducts(counts, custId, category,function(result){
+	productModel.getMostRecentProducts(counts, category,function(result){
 		res.json(result);
 	});
 });
