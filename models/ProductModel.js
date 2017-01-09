@@ -19,6 +19,25 @@ var convertToB64 = function(product, callBack){
 	});
 }
 
+var getCustomerPreferences = function(product, custId, callBack){
+	var customerQuery = "SELECT IFNULL((SELECT cust_id FROM flags WHERE cust_id = ? AND prod_id = ?), null) AS flag,\
+			 IFNULL((SELECT prod_rating FROM ratings WHERE cust_id = ? AND prod_id=?), null) AS ratings";
+
+	dbConn.query(customerQuery, [custId, product.id, custId, product.id], function(err, prefs){
+	 	if(err){
+	 		console.log(err);
+	 		callBack({ status: "ERROR", msg: err });
+	 		return;
+		}
+
+		console.log(product);
+
+ 		product.ratings = prefs[0].ratings;
+ 		product.flag = prefs[0].flag;
+ 		callBack(product);
+	 });
+}
+
 exports.getProductList = function(callBack){
 	var sql = "SELECT products.prod_name AS name,\
 					  products.prod_id AS id,\
@@ -38,7 +57,7 @@ exports.getProductList = function(callBack){
 	});
 }
 
-exports.getProductByTag = function(prodUid, callBack){
+exports.getProductByTag = function(prodUid, custId, callBack){
 	var sql = "SELECT products.prod_name AS name,\
 					  products.prod_id AS id,\
 					  products.prod_cat AS cat,\
@@ -56,7 +75,13 @@ exports.getProductByTag = function(prodUid, callBack){
 			return;
 		}
 
-		callBack(result);
+		if(custId == undefined){
+			callBack(result);
+		}
+		else{
+			getCustomerPreferences(result[0], custId, callBack);
+		}
+
 	});
 }
 
@@ -80,13 +105,11 @@ exports.getProductById = function(prodId, callBack){
 			callBack();
 			return;
 		}
-
-		console.log(result);
 		callBack(result);
 	});
 }
 
-exports.getProductsByName = function(prodName, callBack){
+exports.getProductsByName = function(prodName, custId, callBack){
 	var prodName = mysql.escape('%' + prodName + '%');
 	var sql = "SELECT prod_id as id,\
 					  prod_name AS name,\
@@ -104,7 +127,13 @@ exports.getProductsByName = function(prodName, callBack){
 			console.log(err);
 			return;
 		}
-		callBack(result);
+
+		if(custId == undefined){
+			callBack(result);
+		}
+		else{
+			getCustomerPreferences(result[0], custId, callBack);
+		}
 	});
 }
 
@@ -165,7 +194,7 @@ exports.insertProduct = function(product, callBack){
 	});
 }
 
-exports.getMostRecentProducts = function(count, category, callBack){
+exports.getMostRecentProducts = function(count, custId, category, callBack){
 	console.log(parseInt(count));
 	var sql = "SELECT prod_id AS id,\
 					  prod_name AS name,\
@@ -178,11 +207,12 @@ exports.getMostRecentProducts = function(count, category, callBack){
 					  ORDER BY(arr_date) DESC LIMIT " + parseInt(count);
 
 	dbConn.query(sql, [category], function(err, result){
-		if(err){
+		if(err || result == null || result.length == 0){
 			console.log(err);
+			callBack({ status: "ERROR", msg: err });
 			return;
 		}
-		callBack(result);
+		getCustomerPreferences(result[0], custId, callBack);
 	});
 }
 

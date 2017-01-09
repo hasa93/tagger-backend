@@ -12,7 +12,13 @@ router.get('/list', authenticator.authenticateStaff, function(req, res){
 });
 
 router.get('/find/name/:name', authenticator.authenticateStaff, function(req, res){
-	productModel.getProductsByName(req.params.name, function(result){
+	productModel.getProductsByName(req.params.name, undefined, function(result){
+		res.json(result);
+	});
+});
+
+router.get('/find/name/:custId/:name', authenticator.authenticateToken, function(req, res){
+	productModel.getProductsByName(req.params.name, req.params.custId, function(result){
 		res.json(result);
 	});
 });
@@ -26,7 +32,16 @@ router.get('/find/id/:prodId', authenticator.authenticateStaff, function(req, re
 
 router.get('/find/uid/:prodUid', authenticator.authenticateToken, function(req, res){
 	var prodUid = req.params.prodUid;
-	productModel.getProductByTag(prodUid, function(result){
+	productModel.getProductByTag(prodUid, undefined, function(result){
+		res.json(result);
+	});
+});
+
+router.get('/find/uid/:custId/:prodUid', authenticator.authenticateToken, function(req, res){
+	var prodUid = req.params.prodUid;
+	var custId = req.params.custId;
+
+	productModel.getProductByTag(prodUid, custId, function(result){
 		res.json(result);
 	});
 });
@@ -104,12 +119,12 @@ router.post('/update/:id', authenticator.authenticateAdmin, function(req, res){
 });
 
 //Protect these routes before deployment
-router.get('/recent/:category/:count', function(req, res){
+router.get('/recent/:custId/:category/:count', function(req, res){
 	var counts = req.params.count;
 	var category = req.params.category;
-	console.log(counts);
-	console.log(category);
-	productModel.getMostRecentProducts(counts, category,function(result){
+	var custId = req.params.custId;
+
+	productModel.getMostRecentProducts(counts, custId, category,function(result){
 		res.json(result);
 	});
 });
