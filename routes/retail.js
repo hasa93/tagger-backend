@@ -36,8 +36,8 @@ router.post('/claim/voucher/:id', authenticator.authenticateStaff, function(req,
 });
 
 router.post('/inventory/update', authenticator.authenticateStaff, function(req, res){
-	var inventoryLevel = req.body;
-	retailModel.updateInventoryLevel(inventoryLevel, function(result){
+	var product = req.body;
+	retailModel.updateInventoryLevel(product, function(result){
 		res.json(result);
 	});
 });
