@@ -165,7 +165,7 @@ exports.insertProduct = function(product, callBack){
 	});
 }
 
-exports.getMostRecentProducts = function(count, callBack){
+exports.getMostRecentProducts = function(count, category, callBack){
 	console.log(parseInt(count));
 	var sql = "SELECT prod_id AS id,\
 					  prod_name AS name,\
@@ -174,11 +174,10 @@ exports.getMostRecentProducts = function(count, callBack){
 					  age_range AS age,\
 					  prod_image AS image,\
 					  prod_desc AS descr\
-					  FROM products ORDER BY(arr_date) DESC LIMIT " + parseInt(count);
+					  FROM products WHERE prod_cat=?\
+					  ORDER BY(arr_date) DESC LIMIT " + parseInt(count);
 
-	console.log(sql);
-
-	dbConn.query(sql, function(err, result){
+	dbConn.query(sql, [category], function(err, result){
 		if(err){
 			console.log(err);
 			return;

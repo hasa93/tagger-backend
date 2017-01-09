@@ -104,10 +104,12 @@ router.post('/update/:id', authenticator.authenticateAdmin, function(req, res){
 });
 
 //Protect these routes before deployment
-router.get('/new/arrivals/:count', function(req, res){
+router.get('/recent/:category/:count', function(req, res){
 	var counts = req.params.count;
+	var category = req.params.category;
 	console.log(counts);
-	productModel.getMostRecentProducts(counts, function(result){
+	console.log(category);
+	productModel.getMostRecentProducts(counts, category,function(result){
 		res.json(result);
 	});
 });
