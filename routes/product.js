@@ -68,7 +68,7 @@ router.post('/insert', authenticator.authenticateAdmin, function(req, res){
 	});
 });
 
-router.post('/insert/tag', authenticator.authenticateAdmin, function(req, res){
+router.post('/insert/tag', authenticator.authenticateStaff, function(req, res){
 	var productTag = req.body;
 	productModel.insertProductTag(productTag, function(result){
 		res.json(result);

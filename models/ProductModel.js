@@ -127,9 +127,10 @@ exports.getProductsByName = function(prodName, callBack){
 }
 
 exports.insertProductTag = function(productTag, callBack){
-	var sql = "INSERT INTO tag_map VALUE (?, ?)";
+	var tagQuery = "INSERT INTO tag_map VALUE (?, ?) ON DUPLICATE KEY\
+	UPDATE prod_id=?";
 
-	dbConn.query(sql, [productTag.uid, productTag.prodId], function(err, result){
+	dbConn.query(tagQuery, [productTag.uid, productTag.prodId, productTag.prodId], function(err, result){
 		if(err){
 			console.log(err);
 			return;
