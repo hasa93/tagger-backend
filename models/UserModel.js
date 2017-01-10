@@ -73,7 +73,7 @@ exports.createCustomer = function(customer, callBack){
 			return;
 		}
 
-		dbConn.query(sql, [customer.fname, customer.lname, customer.cat, customer.contact, customer.addr],
+		dbConn.query(sql, [customer.fname, customer.lname, customer.cat, customer.contact, customer.email],
 			function(err, result){
 				if(err) console.log(err);
 				customer.cust_id = result.insertId;
