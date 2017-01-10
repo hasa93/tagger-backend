@@ -74,4 +74,12 @@ router.post('/flag', function(req, res){
 	});
 });
 
+router.post('/flag/remove', function(req, res){
+	var flag = req.body;
+
+	retailModel.removeFlag(flag.prodId, flag.custId, function(result){
+		res.json(result);
+	});
+});
+
 module.exports = router;

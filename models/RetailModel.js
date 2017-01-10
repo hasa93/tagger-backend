@@ -177,6 +177,19 @@ exports.flagProduct = function(prodId, custId, callBack){
 	});
 }
 
+exports.removeFlag = function(prodId, custId, callBack){
+	var deflagQuery = "DELETE FROM flags WHERE cust_id=? AND prod_id=?";
+
+	dbConn.query(deflagQuery, [custId, prodId], function(err, result){
+		if(err){
+			console.log(err);
+			callBack({ status: "ERROR", msg: err });
+			return;
+		}
+		callBack(result);
+	});
+}
+
 exports.getFlags = function(custId, callBack){
 	var sql = "SELECT cust_id AS custId, prod_id AS prodId FROM flags WHERE cust_id=?";
 
