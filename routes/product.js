@@ -12,13 +12,7 @@ router.get('/list', authenticator.authenticateStaff, function(req, res){
 });
 
 router.get('/find/name/:name', authenticator.authenticateStaff, function(req, res){
-	productModel.getProductsByName(req.params.name, undefined, function(result){
-		res.json(result);
-	});
-});
-
-router.get('/find/name/:custId/:name', authenticator.authenticateToken, function(req, res){
-	productModel.getProductsByName(req.params.name, req.params.custId, function(result){
+	productModel.getProductsByName(req.params.name, function(result){
 		res.json(result);
 	});
 });
@@ -32,16 +26,7 @@ router.get('/find/id/:prodId', authenticator.authenticateStaff, function(req, re
 
 router.get('/find/uid/:prodUid', authenticator.authenticateToken, function(req, res){
 	var prodUid = req.params.prodUid;
-	productModel.getProductByTag(prodUid, undefined, function(result){
-		res.json(result);
-	});
-});
-
-router.get('/find/uid/:custId/:prodUid', authenticator.authenticateToken, function(req, res){
-	var prodUid = req.params.prodUid;
-	var custId = req.params.custId;
-
-	productModel.getProductByTag(prodUid, custId, function(result){
+	productModel.getProductByTag(prodUid, function(result){
 		res.json(result);
 	});
 });
@@ -144,6 +129,15 @@ router.get('/get/flagged/:id', function(req, res){
 router.get('/get/image/:id', function(req, res){
 	var prodId = req.params.id;
 	res.sendFile('public/dress-one.jpg');
+});
+
+router.post('/get/prefs/:custId', function(req, res){
+	var custId = req.params.custId;
+	var product = req.body;
+
+	productModel.getCustomerPreferences(product, custId, function(result){
+		res.json(result);
+	});
 });
 
 module.exports = router;

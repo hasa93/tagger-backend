@@ -57,7 +57,7 @@ exports.getProductList = function(callBack){
 	});
 }
 
-exports.getProductByTag = function(prodUid, custId, callBack){
+exports.getProductByTag = function(prodUid, callBack){
 	var sql = "SELECT products.prod_name AS name,\
 					  products.prod_id AS id,\
 					  products.prod_cat AS cat,\
@@ -75,13 +75,7 @@ exports.getProductByTag = function(prodUid, custId, callBack){
 			return;
 		}
 
-		if(custId == undefined){
-			callBack(result);
-		}
-		else{
-			exports.getCustomerPreferences(result[0], custId, callBack);
-		}
-
+		callBack(result);
 	});
 }
 
@@ -109,7 +103,7 @@ exports.getProductById = function(prodId, callBack){
 	});
 }
 
-exports.getProductsByName = function(prodName, custId, callBack){
+exports.getProductsByName = function(prodName, callBack){
 	var prodName = mysql.escape('%' + prodName + '%');
 	var sql = "SELECT prod_id as id,\
 					  prod_name AS name,\
@@ -128,12 +122,7 @@ exports.getProductsByName = function(prodName, custId, callBack){
 			return;
 		}
 
-		if(custId == undefined){
-			callBack(result);
-		}
-		else{
-			exports.getCustomerPreferences(result[0], custId, callBack);
-		}
+		callBack(result);
 	});
 }
 
