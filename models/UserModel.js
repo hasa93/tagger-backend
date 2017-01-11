@@ -121,13 +121,14 @@ exports.updateStaffDetails = function(staffId, staffMember, callBack){
 }
 
 exports.updateCustomerDetails = function(customer, callBack){
-	var sql = "UPDATE customer SET (cust_fname, cust_lname, cust_contact, cust_addr)\
-	(?, ?, ?, ?) WHERE cust_id=?";
+	var sql = "UPDATE customer SET cust_fname=?, cust_lname=?, cust_contact=?\
+	WHERE cust_id=?";
 
-	dbConn.query(sql, [customer.fname, customer.lname, customer.contact, customer.address, customer.id],
+	dbConn.query(sql, [customer.fname, customer.lname, customer.contact, customer.id],
 		function(err, result){
 			if(err){
 				console.log(err);
+				callBack({ status: "ERROR", msg: err });
 				return;
 			}
 		callBack(result);

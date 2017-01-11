@@ -47,4 +47,10 @@ router.post('/update/staff/details/:id', authenticator.authenticateAdmin, functi
 	});
 });
 
+router.post('/update/customer', authenticator.authenticateToken, function(req, res){
+	userModel.updateCustomerDetails(req.body, function(result){
+		res.json(result);
+	});
+});
+
 module.exports = router;
