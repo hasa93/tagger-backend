@@ -82,4 +82,12 @@ router.post('/flag/remove', function(req, res){
 	});
 });
 
+router.post('/voucher/transfer', function(req, res){
+	var transfer = req.body;
+
+	retailModel.transferVoucher(transfer.voucherId, transfer.recvContact, function(result){
+		res.json(result);
+	});
+});
+
 module.exports = router;

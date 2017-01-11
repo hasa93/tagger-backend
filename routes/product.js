@@ -126,11 +126,6 @@ router.get('/get/flagged/:id', function(req, res){
 	});
 });
 
-router.get('/get/image/:id', function(req, res){
-	var prodId = req.params.id;
-	res.sendFile('public/dress-one.jpg');
-});
-
 router.post('/get/prefs/:custId', function(req, res){
 	var custId = req.params.custId;
 	var product = req.body;
