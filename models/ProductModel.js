@@ -206,7 +206,14 @@ exports.getProductImage = function(prodId, callBack){
 }
 
 exports.getFlaggedProducts = function(custId, callBack){
-	var sql = "SELECT products.* FROM flags INNER JOIN products ON flags.prod_id=products.prod_id WHERE cust_id=?";
+	var sql = "SELECT products.prod_id AS id,\
+					  products.prod_name AS name,\
+					  products.unit_price AS price,\
+					  products.arr_date AS date,\
+					  products.age_range AS age,\
+					  products.prod_image AS image,\
+					  products.prod_desc AS descr\
+					  FROM flags INNER JOIN products ON flags.prod_id=products.prod_id WHERE cust_id=?";
 
 	dbConn.query(sql, [custId], function(err, result){
 		if(err || result.length === 0){
