@@ -2,23 +2,6 @@ var mysql = require('mysql');
 var dbConn = require('../sqlConn');
 var fs = require('fs');
 
-var convertToB64 = function(product, callBack){
-	product.image = __dirname + '/../thumbs' + product.image;
-
-	fs.readFile(product.image, function(err, file){
-		if(err){
-			console.log(err);
-			product.image = undefined;
-			callBack(product);
-			return;
-		}
-
-		var b64 = new Buffer(file).toString('base64');
-		product.image = b64;
-		callBack(product);
-	});
-}
-
 exports.getCustomerPreferences = function(product, custId, callBack){
 	var customerQuery = "SELECT IFNULL((SELECT cust_id FROM flags WHERE cust_id = ? AND prod_id = ?), null) AS flag,\
 			 IFNULL((SELECT prod_rating FROM ratings WHERE cust_id = ? AND prod_id=?), null) AS ratings";
@@ -223,16 +206,14 @@ exports.getProductImage = function(prodId, callBack){
 }
 
 exports.getFlaggedProducts = function(custId, callBack){
-	var sql = "SELECT * FROM flags WHERE cust_id=?";
+	var sql = "SELECT products.* FROM flags INNER JOIN products ON flags.prod_id=products.prod_id WHERE cust_id=?";
 
 	dbConn.query(sql, [custId], function(err, result){
 		if(err || result.length === 0){
 			console.log(err);
+			callBack({ status: "ERROR", msg: err });
 			return;
 		}
-
-		var prodId = result[0].prod_id;
-
-		exports.getProductById(prodId, callBack);
+		callBack(result);
 	});
 }
