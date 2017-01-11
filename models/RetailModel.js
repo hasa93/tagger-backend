@@ -215,3 +215,31 @@ exports.getVoucherByCustomer = function(custContact, callBack){
 		callBack(result);
 	});
 }
+
+exports.transferVoucher = function(voucherId, recvContact, callBack){
+	var verifyQuery = "SELECT cust_id FROM customer WHERE cust_contact=?";
+
+	dbConn.query(verifyQuery, [recvContact], function(err, result){
+		if(err){
+			console.log(err);
+			callBack({ status: "ERROR" });
+			return;
+		}
+
+		if(result.length == 1){
+			var transferQuery = "UPDATE voucher SET cust_contact=? WHERE vouch_id=?";
+
+			dbConn.query(transferQuery, [recvContact, voucherId], function(err, result){
+				if(err){
+					console.log(err);
+					callBack({ status: "ERROR" });
+					return;
+				}
+				callBack({ status: "SUCCESS" });
+			});
+		}
+		else{
+			callBack({ status: "ERROR", msg: "Receiver not found" });
+		}
+	});
+}
