@@ -10,6 +10,7 @@ var authenticator = require('./routes/authenticate');
 var user = require('./routes/user');
 var product = require('./routes/product');
 var retail = require('./routes/retail');
+var messageQueue = require('./messages');
 
 var app = express();
 var server = require('http').Server(app);
@@ -19,7 +20,20 @@ var appRouter = express.Router();
 io.on('connection', function(socket){
   console.log("User connected...");
   socket.emit("hello", { text: "yo dude!"});
+
+  socket.on('CASHIER_LOGGED_IN', function(msg){
+      console.log("Cahier login event...");
+      console.log(msg);
+      messageQueue.addToMessageQueue(msg.branchName, { type: "LOGIN", uname: msg.uname });
+      io.emit('UPDATE_MESSAGES', "Update Message Feeds");
+  });
+
+  socket.on('GET_MESSAGES', function(branch){
+    socket.emit('BRANCH_MESSAGES', messageQueue.getMessageQueue(branch.branchName));
+  });
+
 });
+
 
 app.set('view engine', 'jade');
 app.set('views', path.join(__dirname, 'views'));
