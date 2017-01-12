@@ -224,3 +224,17 @@ exports.getFlaggedProducts = function(custId, callBack){
 		callBack(result);
 	});
 }
+
+exports.rateProduct = function(rating, callBack){
+	var ratingQuery = "INSERT INTO ratings VALUES (?, ?, ?) ON DUPLICATE KEY\
+	UPDATE prod_rating=?";
+
+	dbConn.query(ratingQuery, [rating.custId, rating.prodId, rating.prodRating, rating.prodRating], function(err, result){
+		if(err){
+			console.log(err);
+			callBack({ status: "ERROR", msg: err });
+			return;
+		}
+		callBack({ status: "SUCCESS" });
+	});
+}

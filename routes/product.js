@@ -135,4 +135,11 @@ router.post('/get/prefs/:custId', function(req, res){
 	});
 });
 
+router.post('/rate', function(req, res){
+	var rating = req.body;
+	productModel.rateProduct(rating, function(result){
+		res.json(result);
+	});
+});
+
 module.exports = router;
