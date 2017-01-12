@@ -13,11 +13,7 @@ exports.getCustomerPreferences = function(product, custId, callBack){
 	 		return;
 		}
 
-		console.log(product);
-
- 		product.ratings = prefs[0].ratings;
- 		product.flag = prefs[0].flag;
- 		callBack(product);
+		callBack(prefs);
 	 });
 }
 
