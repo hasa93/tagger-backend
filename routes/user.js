@@ -38,17 +38,18 @@ router.post('/delete/staff/:id', authenticator.authenticateAdmin, function(req, 
 	})
 });
 
-router.post('/update/staff/details/:id', authenticator.authenticateAdmin, function(req, res){
+router.post('/update/staff', authenticator.authenticateAdmin, function(req, res){
 	var staffMember = req.body;
-	var staffId = req.params.id;
 
-	userModel.updateStaffDetails(staffId, staffMember, function(result){
+	userModel.updateStaffDetails(staffMember, function(result){
 		res.json(result);
 	});
 });
 
 router.post('/update/customer', authenticator.authenticateToken, function(req, res){
-	userModel.updateCustomerDetails(req.body, function(result){
+	var customer = req.body;
+
+	userModel.updateCustomerDetails(customer, function(result){
 		res.json(result);
 	});
 });

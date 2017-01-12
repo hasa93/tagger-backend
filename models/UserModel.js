@@ -9,7 +9,11 @@ exports.createLogin = function(user, callBack){
 
 	dbConn.query(createQuery, [user.uname, user.passwd, user.email, user.staff_id, user.cust_id],
 		function(err, result){
-			if(err) console.log(err);
+			if(err){
+				callBack({ status: "ERROR", msg: err });
+				console.log(err);
+				return;
+			}
 			result.user = user;
 			callBack(result);
 	});
@@ -25,6 +29,7 @@ exports.createStaffMember = function(staffMember, callBack){
 
 	dbConn.query(existQuery, [staffMember.uname], function(err, result){
 		if(err){
+			callBack({ status: "ERROR", msg: err });
 			console.log(err);
 			return;
 		}
@@ -37,7 +42,12 @@ exports.createStaffMember = function(staffMember, callBack){
 
 		dbConn.query(insertQuery, [staffMember.fname, staffMember.lname, staffMember.type, staffMember.contact, staffMember.branchId],
 			function(err, result){
-				if(err) console.log(err);
+				if(err){
+					callBack({ status: "ERROR", msg: err });
+					console.log(err);
+					return;
+				}
+
 				staffMember.staff_id = result.insertId;
 				console.log(staffMember);
 
@@ -63,6 +73,7 @@ exports.createCustomer = function(customer, callBack){
 		console.log("Running query...");
 
 		if(err){
+			callBack({ status: "ERROR", msg: err });
 			console.log(err);
 			return;
 		}
@@ -95,7 +106,11 @@ exports.searchStaffByName = function(name, callBack){
 	logins.uname FROM staff INNER JOIN logins ON logins.staff_id=staff.staff_id WHERE staff.staff_fname LIKE " + name +" OR staff.staff_lname LIKE " + name;
 
 	dbConn.query(sql, function(err, result){
-		if(err) console.log(err);
+		if(err) {
+			callBack({ status: "ERROR", msg: err });
+			console.log(err);
+			return;
+		}
 		callBack(result);
 	});
 }
@@ -104,18 +119,25 @@ exports.deleteStaffById = function(staffId, callBack){
 	var sql = "DELETE FROM staff WHERE staff_id=?";
 
 	dbConn.query(sql, [staffId], function(err, result){
-		if(err) console.log(err);
+		if(err){
+			callBack({ status: "ERROR", msg: err });
+			console.log(err);
+			return;
+		}
 		callBack(result);
 	});
 }
 
-exports.updateStaffDetails = function(staffId, staffMember, callBack){
-	var sql = "UPDATE staff SET staff_type=?, staff_contact=?, \
-	u_name=? WHERE staff_id=?";
+exports.updateStaffDetails = function(taffMember, callBack){
+	var sql = "UPDATE staff SET staff_fname=?, staff_lname=?, staff_contact=? WHERE staff_id=?";
 
-	dbConn.query(sql, [staffMember.type, staffMember.contact, staffMember.uname, staffId],
+	dbConn.query(sql, [staffMember.fname, staffMember.lname, staffMember.contact, staffMember.id],
 		function(err, result){
-			if(err) console.log(err);
+			if(err) {
+				callBack({ status: "ERROR", msg: err });
+				console.log(err);
+				return;
+			}
 			callBack(result);
 	});
 }
