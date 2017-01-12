@@ -128,7 +128,7 @@ exports.deleteStaffById = function(staffId, callBack){
 	});
 }
 
-exports.updateStaffDetails = function(taffMember, callBack){
+exports.updateStaffDetails = function(staffMember, callBack){
 	var sql = "UPDATE staff SET staff_fname=?, staff_lname=?, staff_contact=? WHERE staff_id=?";
 
 	dbConn.query(sql, [staffMember.fname, staffMember.lname, staffMember.contact, staffMember.id],
