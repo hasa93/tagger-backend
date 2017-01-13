@@ -78,7 +78,7 @@ exports.createCustomer = function(customer, callBack){
 			return;
 		}
 
-		if(result.length != 0){
+		if(result.length > 0){
 			console.log("User Exists");
 			callBack({ status: "ERROR", message: "User Exists" });
 			return;
@@ -143,16 +143,35 @@ exports.updateStaffDetails = function(staffMember, callBack){
 }
 
 exports.updateCustomerDetails = function(customer, callBack){
-	var sql = "UPDATE customer SET cust_fname=?, cust_lname=?, cust_contact=?\
+	var customerUpdate = "UPDATE customer SET cust_fname=?, cust_lname=?, cust_contact=?\
 	WHERE cust_id=?";
+	var existQuery = "SELECT cust_id FROM customer WHERE cust_contact=?";
 
-	dbConn.query(sql, [customer.fname, customer.lname, customer.contact, customer.id],
-		function(err, result){
-			if(err){
-				console.log(err);
-				callBack({ status: "ERROR", msg: err });
-				return;
-			}
-		callBack(result);
+	dbConn.query(existQuery, [customer.contact], function(err, result){
+		if(err){
+			console.log(err);
+			callBack({ status: "ERROR", msg: err });
+			return;
+		}
+
+		if(result.length > 1){
+			callBack({ status: "ERROR", msg: "Contact Exists" });
+			return;
+		}
+		else if(result.length == 1 && customer.id != result[0].cust_id){
+			callBack({ status: "ERROR", msg: "Contact Exists" });
+			return;
+		}
+
+		dbConn.query(customerUpdate, [customer.fname, customer.lname, customer.contact, customer.id],
+			function(err, result){
+				if(err){
+					console.log(err);
+					callBack({ status: "ERROR", msg: err });
+					return;
+				}
+
+			callBack(result);
+		});
 	});
 }
