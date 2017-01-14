@@ -169,6 +169,25 @@ exports.getSalesById = function(startDate, endDate, prodId, callBack){
 	});
 }
 
+exports.getMostSoldProducts = function(callBack){
+	var sql = "SELECT products.prod_name AS name,\
+			   SUM(sales_records.qty) AS qty\
+			   FROM products INNER JOIN sales_records\
+			   ON products.prod_id = sales_records.product_id\
+			   GROUP BY (sales_records.product_id) ORDER BY SUM(sales_records.qty)\
+			   DESC LIMIT 4";
+
+	dbConn.query(sql, function(err, result){
+		if(err){
+			console.log(err);
+			callBack({ status: "ERROR", msg: err });
+			return;
+		}
+		callBack(result);
+	});
+
+}
+
 exports.flagProduct = function(prodId, custId, callBack){
 	var sql = "INSERT INTO flags (prod_id, cust_id) VALUES (?, ?)";
 

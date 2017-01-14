@@ -63,7 +63,13 @@ router.post('/stat/sales/id/:id', authenticator.authenticateAdmin, function(req,
 
 	retailModel.getSalesById(dateRange.start, dateRange.end, prodId, function(result){
 		res.json(result);
-	})
+	});
+});
+
+router.get('/stat/sales/favorites', authenticator.authenticateAdmin, function(req, res){
+	retailModel.getMostSoldProducts(function(result){
+		res.json(result);
+	});
 });
 
 router.post('/flag', function(req, res){
