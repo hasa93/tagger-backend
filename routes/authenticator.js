@@ -53,15 +53,8 @@ exports.authenticateMaster = function(req, res, next){
 	verifyToken(masterAuthenticator, req, res, next);
 }
 
-exports.authenticateToken = function(req, res, next){
-	if(req.headers.token && req.headers.token != ""){
-		next();
-		return;
-	}
-
-	res.json({
-		status: "ERROR",
-		msg: "No authorization token found"
-	});
-	return;
+exports.authenticateUser = function(req, res, next){
+	verifyToken(function(profile){
+		return profile;
+	}, req, res, next);
 }

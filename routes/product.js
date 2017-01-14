@@ -5,7 +5,7 @@ var authenticator = require('./authenticator');
 var uploader = require('../uploader');
 var fs = require('fs');
 
-router.get('/list', authenticator.authenticateStaff, function(req, res){
+router.get('/list', authenticator.authenticateUser, function(req, res){
 	productModel.getProductList(function(list){
 		res.json(list);
 	});
@@ -24,7 +24,7 @@ router.get('/find/id/:prodId', authenticator.authenticateStaff, function(req, re
 	});
 });
 
-router.get('/find/uid/:prodUid', authenticator.authenticateToken, function(req, res){
+router.get('/find/uid/:prodUid', authenticator.authenticateUser, function(req, res){
 	var prodUid = req.params.prodUid;
 	productModel.getProductByTag(prodUid, function(result){
 		res.json(result);
@@ -103,8 +103,7 @@ router.post('/update/:id', authenticator.authenticateAdmin, function(req, res){
 	});
 });
 
-//Protect these routes before deployment
-router.get('/recent/:category/:count', function(req, res){
+router.get('/recent/:category/:count', authenticator.authenticateUser, function(req, res){
 	var counts = req.params.count;
 	var category = req.params.category;
 	var custId = req.params.custId;
@@ -114,7 +113,7 @@ router.get('/recent/:category/:count', function(req, res){
 	});
 });
 
-router.get('/get/flagged/:id', function(req, res){
+router.get('/get/flagged/:id', authenticator.authenticateUser, function(req, res){
 	var custId = req.params.id;
 
 	productModel.getFlaggedProducts(custId, function(result){
@@ -126,7 +125,7 @@ router.get('/get/flagged/:id', function(req, res){
 	});
 });
 
-router.post('/get/prefs/:custId', function(req, res){
+router.post('/get/prefs/:custId', authenticator.authenticateUser, function(req, res){
 	var custId = req.params.custId;
 	var product = req.body;
 
@@ -135,7 +134,7 @@ router.post('/get/prefs/:custId', function(req, res){
 	});
 });
 
-router.post('/rate', function(req, res){
+router.post('/rate', authenticator.authenticateUser, function(req, res){
 	var rating = req.body;
 	productModel.rateProduct(rating, function(result){
 		res.json(result);

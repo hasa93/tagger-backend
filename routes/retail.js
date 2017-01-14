@@ -21,7 +21,7 @@ router.get('/find/voucher/:id', authenticator.authenticateStaff, function(req, r
 	});
 });
 
-router.get('/find/voucher/cust/:contact', authenticator.authenticateToken, function(req, res){
+router.get('/find/voucher/cust/:contact', authenticator.authenticateUser, function(req, res){
 	var contact = req.params.contact;
 
 	retailModel.getVoucherByCustomer(contact, function(result){
@@ -72,7 +72,7 @@ router.get('/stat/sales/favorites', authenticator.authenticateAdmin, function(re
 	});
 });
 
-router.post('/flag', function(req, res){
+router.post('/flag', authenticator.authenticateUser, function(req, res){
 	var flag = req.body;
 
 	retailModel.flagProduct(flag.prodId, flag.custId, function(result){
@@ -80,7 +80,7 @@ router.post('/flag', function(req, res){
 	});
 });
 
-router.post('/flag/remove', function(req, res){
+router.post('/flag/remove', authenticator.authenticateUser, function(req, res){
 	var flag = req.body;
 
 	retailModel.removeFlag(flag.prodId, flag.custId, function(result){
@@ -88,7 +88,7 @@ router.post('/flag/remove', function(req, res){
 	});
 });
 
-router.post('/voucher/transfer', function(req, res){
+router.post('/voucher/transfer', authenticator.authenticateUser, function(req, res){
 	var transfer = req.body;
 
 	retailModel.transferVoucher(transfer.voucherId, transfer.recvContact, function(result){

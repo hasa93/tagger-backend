@@ -46,7 +46,7 @@ router.post('/update/staff', authenticator.authenticateAdmin, function(req, res)
 	});
 });
 
-router.post('/update/customer', authenticator.authenticateToken, function(req, res){
+router.post('/update/customer', authenticator.authenticateUser, function(req, res){
 	var customer = req.body;
 
 	userModel.updateCustomerDetails(customer, function(result){
