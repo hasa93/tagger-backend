@@ -121,7 +121,9 @@ exports.createInvoice = function(ticket, callBack){
 }
 
 exports.getAllSales = function(startDate, endDate, callBack){
-	var sql = "SELECT DATE(invoices.invoice_date) AS date, SUM(sales_records.qty) AS qty\
+	var sql = "SELECT DATE(invoices.invoice_date) AS date,\
+			   SUM(sales_records.qty) AS qty,\
+			   SUM(invoices.invoice_total) AS total\
 			   FROM invoices INNER JOIN sales_records ON invoices.invoice_id=sales_records.invoice_id\
 			   GROUP BY DATE(invoices.invoice_date)";
 
@@ -144,7 +146,9 @@ exports.getAllSales = function(startDate, endDate, callBack){
 }
 
 exports.getSalesById = function(startDate, endDate, prodId, callBack){
-	var sql = "SELECT DATE(invoices.invoice_date) AS date, SUM(sales_records.qty) AS qty\
+	var sql = "SELECT DATE(invoices.invoice_date) AS date,\
+			   SUM(sales_records.qty) AS qty,\
+			   SUM(invoices.invoice_total) AS total\
 			   FROM invoices INNER JOIN sales_records ON invoices.invoice_id=sales_records.invoice_id\
 			   WHERE sales_records.product_id=? GROUP BY DATE(invoices.invoice_date)";
 
