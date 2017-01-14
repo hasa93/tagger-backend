@@ -172,7 +172,7 @@ exports.getMostRecentProducts = function(count, category, callBack){
 					  age_range AS age,\
 					  prod_image AS image,\
 					  prod_desc AS descr\
-					  FROM products WHERE prod_cat=?\
+					  FROM products WHERE prod_cat=? AND discontinued IS FALSE\
 					  ORDER BY(arr_date) DESC LIMIT " + parseInt(count);
 
 	dbConn.query(sql, [category], function(err, result){
