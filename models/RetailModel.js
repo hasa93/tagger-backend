@@ -171,7 +171,8 @@ exports.getSalesById = function(startDate, endDate, prodId, callBack){
 
 exports.getMostSoldProducts = function(callBack){
 	var sql = "SELECT products.prod_name AS name,\
-			   SUM(sales_records.qty) AS qty\
+			   SUM(sales_records.qty) AS qty,\
+			   (sales_records.qty * products.unit_price) AS total\
 			   FROM products INNER JOIN sales_records\
 			   ON products.prod_id = sales_records.product_id WHERE products.discontinued IS FALSE\
 			   GROUP BY (sales_records.product_id) ORDER BY SUM(sales_records.qty)\
