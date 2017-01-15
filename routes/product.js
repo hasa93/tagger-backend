@@ -11,7 +11,7 @@ router.get('/list', authenticator.authenticateUser, function(req, res){
 	});
 });
 
-router.get('/find/name/:name', authenticator.authenticateStaff, function(req, res){
+router.get('/find/name/:name', authenticator.authenticateUser, function(req, res){
 	productModel.getProductsByName(req.params.name, function(result){
 		res.json(result);
 	});
