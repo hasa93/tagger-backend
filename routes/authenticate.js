@@ -46,20 +46,6 @@ router.post('/authenticate', function(req, res){
 	});
 });
 
-router.post('/staff', function(req, res){
-
-	var user = req.body;
-
-	loginModel.getStaffMember(user, function(profile){
-		if(profile.status === 'ERROR'){
-			res.json(profile);
-			return;
-		}
-
-		issueToken(profile, res);
-	});
-});
-
 router.post('/customer', function(req, res){
 
 	var user = req.body;

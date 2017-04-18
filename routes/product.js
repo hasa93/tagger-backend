@@ -31,43 +31,6 @@ router.get('/find/uid/:prodUid', authenticator.authenticateUser, function(req, r
 	});
 });
 
-router.post('/delete/:id', authenticator.authenticateAdmin, function(req, res){
-	productModel.deleteProduct(req.params.id, function(result){
-		res.json(result);
-	});
-});
-
-router.post('/insert', authenticator.authenticateAdmin, function(req, res){
-	console.log("Inserting product");
-
-	uploader(req, res, function(err){
-		console.log("Uploading image...");
-		console.log(req);
-
-		if(err){
-			console.log(err);
-			return;
-		}
-
-		var image = 'thumbs/default.png';
-
-
-		if(req.file !== undefined){
-			console.log("File exists...");
-			image = req.file.filename;
-		}
-
-		var product = req.body;
-		product.image = image;
-
-		console.log(product);
-
-		productModel.insertProduct(product, function(result){
-			res.json(result);
-		});
-	});
-});
-
 router.post('/insert/tag', authenticator.authenticateStaff, function(req, res){
 	var productTag = req.body;
 	productModel.insertProductTag(productTag, function(result){
@@ -75,33 +38,7 @@ router.post('/insert/tag', authenticator.authenticateStaff, function(req, res){
 	});
 });
 
-router.post('/update/:id', authenticator.authenticateAdmin, function(req, res){
-	var prodId = req.params.id;
 
-	uploader(req, res, function(err){
-		console.log("Uploading image...");
-		console.log(req);
-
-		if(err){
-			console.log(err);
-			return;
-		}
-
-		var product = JSON.parse(req.body.product);
-
-		if(req.file !== undefined){
-			console.log("File exists...");
-			product.image = req.file.filename;
-		}
-
-
-		console.log(product);
-
-		productModel.updateProduct(prodId, product, function(result){
-			res.json(result);
-		});
-	});
-});
 
 router.get('/recent/:category/:count', authenticator.authenticateUser, function(req, res){
 	var counts = req.params.count;

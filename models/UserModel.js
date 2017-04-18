@@ -19,44 +19,7 @@ exports.createLogin = function(user, callBack){
 	});
 }
 
-exports.createStaffMember = function(staffMember, callBack){
-	console.log("Creating Staff...");
-	staffMember.passwd = sha1(staffMember.passwd);
 
-	var insertQuery = "INSERT INTO staff (staff_fname, staff_lname, staff_type, staff_contact, branch_id)\
-		VALUES (?, ?, ?, ?, ?)";
-	var existQuery = "SELECT uname FROM logins WHERE uname=?";
-
-	dbConn.query(existQuery, [staffMember.uname], function(err, result){
-		if(err){
-			callBack({ status: "ERROR", msg: err });
-			console.log(err);
-			return;
-		}
-
-		if(result.length != 0){
-			console.log("User Exists");
-			callBack({ status: "ERROR", message: "User Exists" });
-			return;
-		}
-
-		dbConn.query(insertQuery, [staffMember.fname, staffMember.lname, staffMember.type, staffMember.contact, staffMember.branchId],
-			function(err, result){
-				if(err){
-					callBack({ status: "ERROR", msg: err });
-					console.log(err);
-					return;
-				}
-
-				staffMember.staff_id = result.insertId;
-				console.log(staffMember);
-
-				exports.createLogin(staffMember, function(result){
-					callBack(result);
-				});
-		});
-	});
-}
 
 exports.createCustomer = function(customer, callBack){
 	console.log("Creating customer...");
@@ -94,51 +57,6 @@ exports.createCustomer = function(customer, callBack){
 				})
 			}
 		);
-	});
-}
-
-exports.searchStaffByName = function(name, callBack){
-	console.log("Looking for staff member " + name);
-	var name = mysql.escape('%' + name + '%');
-
-	var sql = "SELECT staff.staff_id AS id, staff.staff_type AS type, staff.staff_fname AS fname,\
-	staff.staff_lname AS lname, staff.staff_contact AS contact, staff.branch_id AS branchId,\
-	logins.uname FROM staff INNER JOIN logins ON logins.staff_id=staff.staff_id WHERE staff.staff_fname LIKE " + name +" OR staff.staff_lname LIKE " + name;
-
-	dbConn.query(sql, function(err, result){
-		if(err) {
-			callBack({ status: "ERROR", msg: err });
-			console.log(err);
-			return;
-		}
-		callBack(result);
-	});
-}
-
-exports.deleteStaffById = function(staffId, callBack){
-	var sql = "DELETE FROM staff WHERE staff_id=?";
-
-	dbConn.query(sql, [staffId], function(err, result){
-		if(err){
-			callBack({ status: "ERROR", msg: err });
-			console.log(err);
-			return;
-		}
-		callBack(result);
-	});
-}
-
-exports.updateStaffDetails = function(staffMember, callBack){
-	var sql = "UPDATE staff SET staff_fname=?, staff_lname=?, staff_contact=? WHERE staff_id=?";
-
-	dbConn.query(sql, [staffMember.fname, staffMember.lname, staffMember.contact, staffMember.id],
-		function(err, result){
-			if(err) {
-				callBack({ status: "ERROR", msg: err });
-				console.log(err);
-				return;
-			}
-			callBack(result);
 	});
 }
 

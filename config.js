@@ -4,7 +4,7 @@ var config = {
 		host: 'localhost',
 		user: 'root',
 		password: '', //Insert the root password of the db
-		database: 'tagger'
+		database: 'store'
 	},
 	secret: 'INSERT YOUR JWT SECRET HERE'
 }
